@@ -202,7 +202,7 @@ const { videoInputs } = useDevicesList({
     <span>Inicializando...{{ progress*100 }}</span>
     <progress indeterminate class="" min="0" max="1" :value="progress"></progress>
     </template>
-    <canvas ref="canvas" class="canvas"></canvas>
+    <canvas ref="canvas" class="w-60vw h-80vh"></canvas>
 
     </div>
 </div>
@@ -212,20 +212,14 @@ const { videoInputs } = useDevicesList({
 
 
 <style scoped>
-/* .container {
-    background: gray;
-    height: 78rem;
-    width: 100%;
-    max-width: none;
-    max-height: none;
-    display: flex;
-    justify-content: center;
-} */
-canvas {
-    max-width: 940px;
-    max-height: 640px;
-}
 
+canvas {
+  min-width: 800px ;  
+  min-height: 500px ;
+
+  max-width: 980px;
+  max-height: 740px;
+}
 
 .block {
     border: 3px solid rgb(91, 91, 91);
@@ -234,10 +228,3 @@ canvas {
 }
 
 </style>
-
-<!-- exportação do componente -->
-<script lang="ts">
-    export default {
-        name: 'VideoDetector'
-    }
-</script>

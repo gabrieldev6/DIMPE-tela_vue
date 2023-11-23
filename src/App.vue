@@ -6,6 +6,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
+import Element from './components/element/element.vue'
   library.add(fas);
     
 
@@ -18,7 +19,7 @@ const isMenuOpen = ref(false)
     <div class="container mx-auto flex justify-between items-center">
       <img src='./assets/Logo.png' alt="" class="h-16">
 
-      <button @click="isMenuOpen = !isMenuOpen" class="bg-[#01091C] h-50px w-50px">
+      <button @click="isMenuOpen = !isMenuOpen" class="bg-[#01091C] h-50px w-50px cursor-pointer">
         <font-awesome-icon icon="fa-solid fa-bars" class="c-white h-30px w-30px"/>
       </button>
 
@@ -31,7 +32,7 @@ const isMenuOpen = ref(false)
       <RouterView />
     </div>
     <Transition>
-      <div v-if="isMenuOpen" class="w-90 barraLateral bg-gray-500"></div>
+      <div v-if="isMenuOpen" class="w-90 barraLateral bg-gray-500 flex justify-center " ><Element></Element></div>
     </Transition>
 
     

@@ -91,11 +91,15 @@ export class Detector {
     let result = this.yolov7.execute(input) as tf.Tensor
 
     let res = (result.arraySync() as any[])[0]
-
+    
+    
+    tf.dispose()
     result.dispose()
+    input.dispose()
 
+    
     const detections = non_max_suppression(res)
-
+    
     return detections.map(([x, y, w, h, score, classe]) => {
       const width = w * ratio_x
       const height = h * ratio_y

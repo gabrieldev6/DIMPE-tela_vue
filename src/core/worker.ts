@@ -73,7 +73,7 @@ async function loop() {
 
     // Detecta os objetos no frame
     const result = await Detector.detect(tensor as unknown as tf.TensorLike)
-
+    
     tensor.dispose()
 
     // Envia o resultado para a interface

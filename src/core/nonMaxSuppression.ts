@@ -9,7 +9,7 @@ function xywh2xyxy(x: any[]) {
   return y;
 }
 
-export function non_max_suppression(res: any[], conf_thresh = 0.50, iou_thresh = 0.2, max_det = 300) {
+export function non_max_suppression(res: any[], conf_thresh = 0.50, iou_thresh = 0.2) {
 
   // Initialize an empty list to store the selected boxes
   const selected_detections = [];

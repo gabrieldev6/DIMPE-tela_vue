@@ -15,7 +15,7 @@ const isMenuOpen = ref(false)
 </script>
 
 <template>
-  <div class="flex bg-[#01091C] h-12vh">
+  <div class="flex bg-[#01091C] h-12%">
     <div class="container mx-auto flex justify-between items-center">
       <img src='./assets/Logo.png' alt="" class="h-16">
 
@@ -26,13 +26,13 @@ const isMenuOpen = ref(false)
 
     </div>
   </div>
-  <div class="flex w-full h-88vh bg-gray">
+  <div class="flex w-full h-88% bg-gray">
 
-    <div class="flex-1">
+    <div class="flex-1 h-78%">
       <RouterView />
     </div>
     <Transition>
-      <div v-if="isMenuOpen" class="w-90 barraLateral bg-gray-500 flex justify-center " ><Element></Element></div>
+      <div v-if="isMenuOpen" class="barraLateral flex w-90  bg-gray-500 flex justify-center" ><Element></Element></div>
     </Transition>
 
     

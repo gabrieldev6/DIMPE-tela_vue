@@ -28,7 +28,7 @@ const isMenuOpen = ref(false)
   </div>
   <div class="flex w-full h-88% bg-gray">
 
-    <div class="flex-1 h-78%">
+    <div class="flex-1 h-100% ">
       <RouterView />
     </div>
     <Transition>

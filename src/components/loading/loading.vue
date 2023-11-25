@@ -8,7 +8,7 @@ console.log(props.max, props.progress)
 <template>
   <div class="items-center text-center">
     <p>Inicializando...</p>
-    <div class="bg-white p-1px rounded-2.1 flex justify-center items-center">
+    <div class="bg-white px-3px py-1px rounded-2.1 flex justify-center items-center">
       
       <progress indeterminate class="progress w-full"  :max="props.max" :value="props.progress" ></progress>
       <p>{{parseInt(props.progress)}}</p>

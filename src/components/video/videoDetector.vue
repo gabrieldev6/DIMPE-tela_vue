@@ -8,7 +8,7 @@ import DetectorWorker from '../../core/worker?worker'
 import { useDevicesList, useLocalStorage } from '@vueuse/core'
 
 import Loading from "../loading/loading.vue"
-
+// import Alert from '../alert/alert.vue'
 const { videoInputs } = useDevicesList({
   requestPermissions: true,
   constraints: {
@@ -189,22 +189,25 @@ watch(input, async (input: any) => {
 <template>
   <div class="container h-88% flex justify-center">
     <div class="videoDetector items-center ">
-      <div class="flex w-full">
-        <select v-model="input" class="px-4 py-2">
+      <div class="flex w-full my-5px">
+        <select v-model="input" class="px-4 py-2 rounded-lg">
           <option disabled selected value="">Câmera</option>
           <option v-for="device in videoInputs" :key="device.deviceId" :value="device.deviceId">{{ device.label ??
             device.deviceId }}</option>
           <option value="screen">Tela</option>
         </select>
       </div>
-      <template v-if="!ready">
-        <div class="m-4px items-center">
-          <Loading max="100" :progress="progress * 100" :ready="ready"></Loading>
-        </div>
-      </template>
-      <!-- <Loading max="100" :progress="progress * 100" :ready="ready"></Loading> -->
-      <canvas ref="canvas" class="w-50vw h-88%"></canvas>
-
+      <div class="items-center text-center">
+        <template v-if="!ready">
+          <div class="m-4px items-center">
+            
+            <Loading max="100" :progress="progress * 100" :ready="ready"></Loading>
+          </div>
+        </template>
+        <!-- <Alert :porcentagem="89.9" :classe="'person'"></Alert> -->
+        <!-- <Loading max="100" :progress="progress * 100" :ready="ready"></Loading> -->
+        <canvas ref="canvas" class="w-70% h-20%"></canvas>
+      </div>
     </div>
   </div>
 </template>
@@ -214,8 +217,8 @@ watch(input, async (input: any) => {
 
 <style scoped>
 canvas {
-  min-width: 800px;
-  min-height: 500px;
+  min-width: 670px;
+  /* min-height: 500px; */
 
   max-width: 980px;
   max-height: 740px;

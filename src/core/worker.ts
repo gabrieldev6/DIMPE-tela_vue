@@ -4,7 +4,7 @@
  * não haja travamentos na interface
  */
 import * as tf from '@tensorflow/tfjs'
-import '@tensorflow/tfjs-backend-webgl'
+// import '@tensorflow/tfjs-backend-webgl'
 import { Detector } from './Detector'
 
 // Próximo frame a ser processado

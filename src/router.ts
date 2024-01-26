@@ -5,17 +5,18 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     {
-      path: '/',
-      name: "dashboard",
-      component: () => import('./pages/dashboard.vue')
-    },
-    {
       path: '/video',
       name: "video",
       component: () => import('./components/video/videoDetector.vue')
 
-    }
+    },
+    {
+      path: '/analitico',
+      name: "analitico",
+      component: () => import('./pages/analitico.vue')
     
+    }
+      
 
   ]
 })

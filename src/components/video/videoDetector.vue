@@ -219,7 +219,7 @@ watch(input, async (input: any) => {
       
     </div>
 
-    <div v-if="erro" class="bg-red-500 rounded-2 p4 flex my-14px">
+    <div v-if="erro" class="bg-red-600 rounded-2 p4 flex my-14px">
       <font-awesome-icon icon="circle-exclamation" class="c-white h-20px w-20px"/>
       <div class="px2">
         <h4 class="text-white">Câmera nao disponivel</h4>

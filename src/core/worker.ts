@@ -38,6 +38,7 @@ const LISTENERS: Record<string, Function> = {
   detect: async (_: any, frame: any) => {
     // Salva o frame para ser processado
     nextTensor = frame
+    
   },
 
   // Quando a interface pedir para parar o Worker...
@@ -68,17 +69,20 @@ async function loop() {
     // Converte o frame para um Tensor do TensorFlow
     const tensor = tf.tensor(nextTensor.data, nextTensor.shape, 'int32');
 
-    // Libera a memória do frame
-    nextTensor = null;
-
-    // Detecta os objetos no frame
-    const result = await Detector.detect(tensor as unknown as tf.TensorLike)
     
-    tensor.dispose()
-
+    // nextTensor = null;
+    
+    // Detecta os objetos no frame
+    const result = await Detector.detect(tensor as unknown as tf.Tensor)
+    
+    
+    
     // Envia o resultado para a interface
     globalThis.postMessage(['result', result])
-
+    // Libera a memória do frame
+    tf.dispose(tensor)
+    tf.dispose(nextTensor)
+    console.log(tf.memory())
     // Aguarda 1/30 de segundo para processar o próximo frame
     await new Promise((resolve) => setTimeout(resolve, 1000 / 30))
   }

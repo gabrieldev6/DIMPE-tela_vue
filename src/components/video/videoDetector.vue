@@ -1,6 +1,5 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import * as tf from '@tensorflow/tfjs'
-import '@tensorflow/tfjs-backend-wasm'
 
 import { computed, onUnmounted, ref, watch, watchEffect } from 'vue';
 import { BoundingBox } from '../../core/Detector';
@@ -8,7 +7,9 @@ import DetectorWorker from '../../core/worker?worker'
 import { useDevicesList, useLocalStorage } from '@vueuse/core'
 
 import Loading from "../loading/loading.vue"
-// import Alert from '../alert/alert.vue'
+
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
 const { videoInputs } = useDevicesList({
   requestPermissions: true,
   constraints: {
@@ -16,7 +17,7 @@ const { videoInputs } = useDevicesList({
     audio: false
   }
 })
-
+let erro = ref<boolean>(false)
 const worker = new DetectorWorker()
 let boundingBoxes: BoundingBox[] = []
 
@@ -26,6 +27,7 @@ watchEffect(() => {
   input.value ??= videoInputs.value[0]?.deviceId
 })
 
+// barra de progresso
 const LISTENERS: Record<string, Function> = {
   progress(_: any, value: number) {
     progress.value = value
@@ -34,6 +36,7 @@ const LISTENERS: Record<string, Function> = {
     boundingBoxes = boxes
   },
   ready: () => {
+    
     ready.value = true
     loop()
   }
@@ -62,7 +65,8 @@ const ctx = computed(() => canvas.value?.getContext('2d'))
 const ready = ref(false)
 
 let nextFrame: number
-let camera: MediaStream
+let camera: MediaStream | void
+
 
 const BOX_STYLE = {
   box: {
@@ -100,7 +104,7 @@ async function loop() {
   }])
 
   frame.dispose()
-  tf.dispose()
+  
 
   draw.drawImage(video, 0, 0)
 
@@ -145,17 +149,13 @@ async function loop() {
 // Destroi o loop de renderização
 onUnmounted(() => {
   cancelAnimationFrame(nextFrame)
-  camera.getTracks().forEach((track) => track.stop())
+  camera?.getTracks().forEach((track) => track.stop())
   postMessage(['stop'])
   worker.terminate()
+  tf.dispose(tf.browser.fromPixels(video))
 })
 
-// Seleciona a primeira câmera disponível
-watch(videoInputs, (devices: any) => {
-  if (devices.length > 0 && !input.value) {
-    input.value = devices[0].deviceId
-  }
-}, { immediate: true })
+
 
 // Inicia a câmera selecionada
 watch(input, async (input: any) => {
@@ -170,60 +170,71 @@ watch(input, async (input: any) => {
   camera = input === 'screen' ? await navigator.mediaDevices.getDisplayMedia({
     video: true,
     audio: false
-  }) : await navigator.mediaDevices.getUserMedia({
+  })
+  : await navigator.mediaDevices.getUserMedia({
     video: {
       deviceId: input
     },
     audio: false
+  }).catch(err => {
+    erro.value = true
+    
+    console.log(err)
   })
 
+  if(!camera) {
+    return
+  }
+  erro.value = false
   // Inicia o vídeo
   video.srcObject = camera
 
   video.play()
-}, {
-  immediate: true
-})
+}, {immediate: true})
+
+
 </script>
   
 <template>
-  <div class="container h-88% flex justify-center">
-    <div class="videoDetector items-center ">
-      <div class="flex w-full my-5px">
+  <div class="p4">
+    <div class="items-center bg-white p4 rounded-2">
+      <div class="flex w-full my-5px justify-between text-center items-center">
+        <h3>Transmissão de imagem</h3>
         <select v-model="input" class="px-4 py-2 rounded-lg">
           <option disabled selected value="">Câmera</option>
-          <option v-for="device in videoInputs" :key="device.deviceId" :value="device.deviceId">{{ device.label ??
-            device.deviceId }}</option>
+          <option v-for="device in videoInputs" :key="device.deviceId" :value="device.deviceId">{{device.label}}</option>
           <option value="screen">Tela</option>
         </select>
       </div>
-      <div class="items-center text-center">
+      
         <template v-if="!ready">
-          <div class="m-4px items-center">
-            
+          <div class="m-4px items-center ">
+
             <Loading max="100" :progress="progress * 100" :ready="ready"></Loading>
           </div>
         </template>
-        <!-- <Alert :porcentagem="89.9" :classe="'person'"></Alert> -->
-        <!-- <Loading max="100" :progress="progress * 100" :ready="ready"></Loading> -->
-        <canvas ref="canvas" class="w-70% h-20%"></canvas>
-      </div>
+
+        <canvas ref="canvas" class="w-100% max-w-640px"></canvas>
+        
+      
     </div>
+
+    <div v-if="erro" class="bg-red-500 rounded-2 p4 flex my-14px">
+      <font-awesome-icon icon="circle-exclamation" class="c-white h-20px w-20px"/>
+      <div class="px2">
+        <h4 class="text-white">Câmera nao disponivel</h4>
+        <p class="text-white">Verifique se a camera esta conectada corretamente, ou se há erro no hardware</p>
+      </div>
+      
+    </div>
+
   </div>
 </template>
-
+<!-- <font-awesome-icon :icon="['far', 'circle-exclamation']" /> -->
 
 
 
 <style scoped>
-canvas {
-  min-width: 670px;
-  /* min-height: 500px; */
-
-  max-width: 980px;
-  max-height: 740px;
-}
-
 .block {
   border: 3px solid rgb(91, 91, 91);
   border-radius: 10px;

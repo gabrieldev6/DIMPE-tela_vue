@@ -1,4 +1,5 @@
-<script setup lang="ts">
+<script lang="ts" setup>
+
 const props = defineProps(['max', 'progress', 'ready'])
 
 
@@ -41,4 +42,6 @@ progress::-ms-fill {
   border-radius: 10px;
   
 }
+
+
 </style>

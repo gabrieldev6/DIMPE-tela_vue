@@ -92,10 +92,10 @@ export class Detector {
 
     let res = (result.arraySync() as any[])[0]
     
+    tf.dispose(result)
     
-    tf.dispose()
-    result.dispose()
     input.dispose()
+    
 
     
     const detections = non_max_suppression(res)
@@ -113,6 +113,7 @@ export class Detector {
         label: labels[classe]
       }
     }).filter((detection) => detection.score >= threshold)
+    
   }
 }
 

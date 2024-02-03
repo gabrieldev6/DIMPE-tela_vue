@@ -25,11 +25,11 @@ const LISTENERS: Record<string, Function> = {
       globalThis.postMessage(['progress', progress])
     })
 
-    ready = true
+    
 
     // Informa a interface que o Worker está pronto
     globalThis.postMessage(['ready'])
-
+    ready = true
     // Inicia o loop de processamento
     loop()
   },
@@ -70,7 +70,7 @@ async function loop() {
     const tensor = tf.tensor(nextTensor.data, nextTensor.shape, 'int32');
 
     
-    // nextTensor = null;
+    nextTensor = null;
     
     // Detecta os objetos no frame
     const result = await Detector.detect(tensor as unknown as tf.Tensor)
@@ -82,7 +82,7 @@ async function loop() {
     // Libera a memória do frame
     tf.dispose(tensor)
     tf.dispose(nextTensor)
-    console.log(tf.memory())
+    
     // Aguarda 1/30 de segundo para processar o próximo frame
     await new Promise((resolve) => setTimeout(resolve, 1000 / 30))
   }

@@ -1,24 +1,53 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
-
+import { createRouter, createWebHistory } from 'vue-router'
+import Login from './pages/login.vue'
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  
+  history: createWebHistory(),
   routes: [
     {
-      path: '/video',
-      name: "video",
-      component: () => import('./components/video/videoDetector.vue')
+      path: '/',
+      name: 'login',
+      component: Login
 
     },
     {
-      path: '/analitico',
-      name: "analitico",
-      component: () => import('./pages/analitico.vue')
+      path: '/newAccount',
+      name: "newAccount",
+      component: () => import('./pages/newAccount.vue')
+    },
     
+    
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('./pages/dashboard.vue'),
+      children: [
+        {
+          path: '/analitico',
+          name: "analitico",
+          component: () => import('./pages/analitico.vue')
+        
+        },
+        {
+          path: '/video',
+          name: "video",
+          component: () => import('./components/video/videoDetector.vue')
+    
+        },
+      ]
+
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: () => import('./pages/notFound.vue')
     }
+
       
 
   ]
 })
+
 
 export default router

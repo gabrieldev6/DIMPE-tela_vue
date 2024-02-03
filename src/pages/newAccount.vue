@@ -49,10 +49,14 @@ const submit = () => {
             })
         } else {
             senhaConfere.value = true
+            campoNull.value = false
+            tudoCerto.value = false
             console.log('senhas sao diferentes')
         }
     } else {
         campoNull.value = true
+        senhaConfere.value = false
+        tudoCerto.value = false
         console.log('algum campo ficou em branco')
     }
 }
@@ -68,7 +72,7 @@ const submit = () => {
             <div class="w-full px-10 py-5 flex justify-center">
                 <div>
                     <h1 class="mt-4">Crie uma conta</h1>
-                    <h5 class="mb-13">Olá, seja bem vindo ao futuro!</h5>
+                    <h5 class="mb-7">Olá, seja bem vindo ao futuro!</h5>
 
                     <div class="bg-white w-full mt-3 rounded-1 shadow flex items-center text-center text-gray">
                         <FontAwesomeIcon icon="fa-solid fa-user" class="p-2"></FontAwesomeIcon>
@@ -91,13 +95,13 @@ const submit = () => {
                             class="p-2 w-full rounded-1">
 
                     </div>
-                    <h6 v-if="senhaConfere" class="text-red px-1">senhas sao diferentes</h6>
-                    <h6 v-if="campoNull" class="text-red px-1">Um ou mais campos estao vazios</h6>
-                    <h6 v-if="tudoCerto" class="text-black mt-3">Conta criada com sucesso</h6>
+                    <h5 v-if="senhaConfere" class="text-red mt-3">senhas são diferentes</h5>
+                    <h5 v-if="campoNull" class="text-red mt-3">Um ou mais campos estao vazios</h5>
+                    <h5 v-if="tudoCerto" class="text-black mt-3">Conta criada com sucesso</h5>
                     <button @click="submit"
-                        class=" shadow w-full mt-7 p-2 hover:bg-blue-500 text-white bg-blue rounded-1 ">Entrar</button>
+                        class=" shadow w-full mt-7 p-2 hover:bg-blue-500 text-white bg-blue rounded-1 ">Cadastrar-se</button>
                     
-                    <div class="flex">
+                    <div class="flex mb-3">
                         <h5>ja possui uma conta?</h5>
                         <router-link :to="{ name: 'login' }">
                             <h5>fazer login</h5>

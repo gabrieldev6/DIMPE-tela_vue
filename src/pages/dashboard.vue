@@ -20,23 +20,24 @@ let saudacoes = ref('')
 let hours = new Date()
 
 
-
 watchEffect(() => {
-    
-    if(hours.getHours() >= 18 && hours.getHours() <= 24) {
-        saudacoes.value = "Boa noite"
-    } else if(hours.getHours() >= 12 && hours.getHours() <= 18) {
-        saudacoes.value = "Boa tarde"
-    } else {
-      saudacoes.value = "Bom dia"
-    }
+
+  if (hours.getHours() >= 18 && hours.getHours() <= 24) {
+    saudacoes.value = "Boa noite"
+  } else if (hours.getHours() >= 12 && hours.getHours() <= 18) {
+    saudacoes.value = "Boa tarde"
+  } else {
+    saudacoes.value = "Bom dia"
+  }
 })
 // const isMenuOpen = ref(false)
 
 </script>
 
 <template>
-  <div class="h-full w-full flex">
+  
+  <template v-if="$route.query.token">
+    <div class="h-full w-full flex">
     <!-- sadbar -->
     <div class="h-full w-20% max-w-225px min-w-144px  bg-white shadow-2xl z-10 px-4 ">
       <ul class="list-none py-4">
@@ -50,33 +51,41 @@ watchEffect(() => {
         </li>
 
         <li>
-          <button type="submit" class=" bg-white shadow hover:shadow-md w-full flex text-4 flex items-center text-center my-1 p-2 rounded-2">
-            <router-link :to="{name: 'video', query:{nome: $route.query.nome, token: $route.query.token, picture: $route.query.picture}}" class="no-underline text-gray-500">
-                <font-awesome-icon icon="fa-solid fa-table-columns" class="mx-2" />
-                Dashboard
-            </router-link>
-          </button>
-        </li>
-        <li>
-          <button type="submit" class=" bg-white shadow hover:shadow-md w-full flex text-4  flex items-center text-center my-1 p-2 rounded-2">
-            
-            <router-link :to="{name: 'analitico', query:{nome: $route.query.nome, token: $route.query.token, picture: $route.query.picture}}" class="no-underline text-gray-500">
-                <font-awesome-icon icon="fa-solid fa-chart-line" class="mx-2 " />
-                Analitico
-            </router-link>
+          <router-link
+            :to="{ name: 'video', query: { nome: $route.query.nome, token: $route.query.token, picture: $route.query.picture } }"
+            class="no-underline ">
+            <button type="submit"
+              class=" bg-white shadow hover:shadow-md w-full flex text-4 flex items-center text-center my-1 p-2 rounded-2 text-gray-500">
 
-          </button>
+              <font-awesome-icon icon="fa-solid fa-table-columns" class="mx-2" />
+              Dashboard
+
+            </button>
+          </router-link>
         </li>
         <li>
-          <button type="submit" class=" bg-white w-full flex text-4 shadow hover:shadow-md text-gray-500 items-center text-center my-1 p-2 rounded-2">
-            <font-awesome-icon icon="fa-solid fa-toolbox" class="mx-2"/>
+          <router-link
+            :to="{ name: 'analitico', query: { nome: $route.query.nome, token: $route.query.token, picture: $route.query.picture } }"
+            class="no-underline">
+            <button type="submit"
+              class=" bg-white shadow hover:shadow-md w-full flex text-4  flex items-center text-center my-1 p-2 rounded-2  text-gray-500">
+              <font-awesome-icon icon="fa-solid fa-chart-line" class="mx-2 " />
+              Analitico
+            </button>
+          </router-link>
+        </li>
+        <li>
+          <button type="submit"
+            class=" bg-white w-full flex text-4 shadow hover:shadow-md text-gray-500 items-center text-center my-1 p-2 rounded-2">
+            <font-awesome-icon icon="fa-solid fa-toolbox" class="mx-2" />
             Opções
           </button>
         </li>
-        
+
         <li>
-          <button type="submit" class=" bg-white w-full flex text-4 shadow hover:shadow-md text-gray-500 items-center text-center my-1 p-2 rounded-2">
-            <font-awesome-icon icon="fa-solid fa-right-from-bracket" class="mx-2"/>
+          <button type="submit"
+            class=" bg-white w-full flex text-4 shadow hover:shadow-md text-gray-500 items-center text-center my-1 p-2 rounded-2">
+            <font-awesome-icon icon="fa-solid fa-right-from-bracket" class="mx-2" />
             sair da conta
           </button>
         </li>
@@ -85,19 +94,25 @@ watchEffect(() => {
 
 
     </div>
-    <!-- lado direito -->
+    <!-- lado direito/ router view -->
     <div class="w-full">
 
       <!-- barra superior -->
       <div class="flex bg-white h-8%  justify-between items-center px-4">
 
-        <h2 >{{ saudacoes }} {{ $route.query.nome }}</h2>
+        <h2>{{ saudacoes }} {{ $route.query.nome }}</h2>
         <div class="flex justify-center items-center">
           <font-awesome-icon icon="fa-solid fa-gear" class="color-gray h-25px w-25px mx-20px" />
           <a href="">
-            <div class=" rounded-full shadow-md w-40px h-40px flex justify-center items-center">
-              <font-awesome-icon v-if="!$route.query.picture" icon="fa-solid fa-user" class="color-gray h-20px w-20px m-1" />
-              <img v-else="$route.query.picture" :src="$route.query.picture" alt="perfil" class="color-gray w-40px h-40px rounded-full" /></div>
+            <router-link :to="{ name: 'perfil', query: { nome: $route.query.nome, picture: $route.query.picture, token: $route.query.token} }">
+              <div class=" rounded-full shadow-md w-40px h-40px flex justify-center items-center">
+                <font-awesome-icon v-if="!$route.query.picture" icon="fa-solid fa-user"
+                  class="color-gray h-20px w-20px m-1" />
+                <img v-else="$route.query.picture" :src="$route.query.picture" alt="perfil"
+                  class="color-gray w-40px h-40px rounded-full" />
+              </div>
+            </router-link>
+
           </a>
         </div>
 
@@ -105,9 +120,9 @@ watchEffect(() => {
 
       <!-- visualição das rotas -->
       <div class="flex bg-gray-200 border-4 h-92%">
-        
-        
-        <RouterView/>
+
+
+        <RouterView />
       </div>
       <!-- <Transition>
       <div v-if="isMenuOpen" class="barraLateral flex w-90  bg-gray-500 flex justify-center" ><Element></Element></div>
@@ -119,6 +134,11 @@ watchEffect(() => {
     </div>
 
 
+  </div>
+  </template>
+
+  <div v-else class="w-full h-full flex items-center justify-center">
+    esteja logado para acessar esta pagina
   </div>
 </template>
 
@@ -142,5 +162,4 @@ watchEffect(() => {
   background-color: #e2e2e2;
   border-radius: 7px;
   transition: all ease-in;
-} */
-</style>
+} */</style>

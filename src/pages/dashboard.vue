@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { RouterLink } from 'vue-router';
 
 import logo from "../assets/loremIpson1.png"
+import { googleLogout } from 'vue3-google-login';
 
 // import { decodeCredential } from 'vue3-google-login';
 
@@ -30,6 +31,10 @@ watchEffect(() => {
     saudacoes.value = "Bom dia"
   }
 })
+const logout = () => {
+  googleLogout()
+  
+}
 // const isMenuOpen = ref(false)
 
 </script>
@@ -83,11 +88,14 @@ watchEffect(() => {
         </li>
 
         <li>
-          <button type="submit"
+          <router-link :to="{name: 'login'}" @click="logout" class="no-underline">
+            <button type="submit"
             class=" bg-white w-full flex text-4 shadow hover:shadow-md text-gray-500 items-center text-center my-1 p-2 rounded-2">
             <font-awesome-icon icon="fa-solid fa-right-from-bracket" class="mx-2" />
             sair da conta
           </button>
+          </router-link>
+          
         </li>
       </ul>
 
@@ -123,6 +131,7 @@ watchEffect(() => {
 
 
         <RouterView />
+       
       </div>
       <!-- <Transition>
       <div v-if="isMenuOpen" class="barraLateral flex w-90  bg-gray-500 flex justify-center" ><Element></Element></div>

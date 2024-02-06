@@ -10,6 +10,7 @@ import Loading from "../loading/loading.vue"
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
+// pede permissão e lista os dispositivos de video
 const { videoInputs } = useDevicesList({
   requestPermissions: true,
   constraints: {
@@ -17,7 +18,9 @@ const { videoInputs } = useDevicesList({
     audio: false
   }
 })
+// se a camera nao puder ser aberta ele gera um alerta de erro
 let erro = ref<boolean>(false)
+
 const worker = new DetectorWorker()
 let boundingBoxes: BoundingBox[] = []
 
@@ -197,7 +200,7 @@ watch(input, async (input: any) => {
   
 <template>
   <div class="p4">
-    <div class="items-center bg-white p4 rounded-2 min-w-600px">
+    <div class="items-center bg-white p4 rounded-2 w-600px min-w-600px h-490px min-h-450px">
       <div class="flex w-full my-5px justify-between text-center items-center">
         <h3>Transmissão de imagem</h3>
         <select v-model="input" class="px-4 py-2 rounded-lg">
@@ -208,13 +211,13 @@ watch(input, async (input: any) => {
       </div>
       
         <template v-if="!ready">
-          <div class="m-4px items-center ">
+          <div class="m-4px items-center w-full h-full ">
 
             <Loading max="100" :progress="progress * 100" :ready="ready"></Loading>
           </div>
         </template>
 
-        <canvas ref="canvas" class="w-100% max-w-640px"></canvas>
+        <canvas v-else ref="canvas" class="w-full max-w-600px"></canvas>
         
       
     </div>
@@ -230,14 +233,5 @@ watch(input, async (input: any) => {
 
   </div>
 </template>
-<!-- <font-awesome-icon :icon="['far', 'circle-exclamation']" /> -->
 
 
-
-<style scoped>
-.block {
-  border: 3px solid rgb(91, 91, 91);
-  border-radius: 10px;
-
-}
-</style>

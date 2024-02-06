@@ -2,13 +2,16 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-
+import img from '../assets/drone1.jpg'
 library.add(fas);
+
+
+
 </script>
 <template>
     <div class="w-full h-full flex justify-center items-center text-center text-black">
         <div>
-            <h1>OOOps!</h1>
+            <h1>Ooops!</h1>
             <div class="flex">
                 <h2>Pagina não encontrada</h2>
                 <font-awesome-icon icon="fa-solid fa-face-sad-tear" class="text-5 p-2"/>
@@ -21,6 +24,7 @@ library.add(fas);
             </router-link>
             
         </div>
+        
         
     </div>
 </template>

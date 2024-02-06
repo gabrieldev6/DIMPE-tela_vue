@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 
+
 const props = defineProps(['max', 'progress', 'ready'])
 
 
@@ -7,41 +8,19 @@ console.log(props.max, props.progress)
 </script>
 
 <template>
-  <div class="items-center text-center">
-    <p>Inicializando...</p>
-    <div class="bg-white px-3px py-1px rounded-2.1 flex justify-center items-center">
+  <div class=" w-full h-70%  flex justify-center items-center">
+    <ul class=" w-full list-none ">
+      <li class="w-full flex justify-center">
+        <div class=" w-30px h-30px animate-spin rounded-full border-solid border-6 border-blue-500 border-t-blue-400 "></div>
+      </li >
+      <li class="w-full flex justify-center pt-3">
+        <h4>Inicializando...{{parseInt(props.progress)}}%</h4>
+      </li>
+    </ul>
+    
+    
+    
       
-      <progress indeterminate class="progress w-full"  :max="props.max" :value="props.progress" ></progress>
-      <p>{{parseInt(props.progress)}}</p>
     </div>
-  </div>
+  
 </template>
-
-<style>
-
-.progress::-webkit-progress-bar {
-  background-color: #e0e0e0;
-  border-radius: 10px;
-  
-}
-
-progress::-webkit-progress-value {
-  background-color: #4c8baf;
-  border-radius: 10px;
-  
-}
-
-progress::-moz-progress-bar {
-  background-color: #4c8baf;
-  border-radius: 10px;
-  
-}
-
-progress::-ms-fill {
-  background-color: #4c8baf;
-  border-radius: 10px;
-  
-}
-
-
-</style>

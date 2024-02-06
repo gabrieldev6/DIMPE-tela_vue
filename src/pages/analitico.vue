@@ -3,6 +3,6 @@
 
 </script>
 <template>
-    analitico
+     
 </template>
 

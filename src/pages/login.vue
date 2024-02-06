@@ -5,7 +5,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { ref } from 'vue'
 import logo from '../assets/imgLogin2.jpg'
 
-import { GoogleLogin, decodeCredential } from 'vue3-google-login';
+import { GoogleLogin, decodeCredential, googleLogout } from 'vue3-google-login';
 import api from '../service/api.ts'
 
 import {userData} from '../types/user'

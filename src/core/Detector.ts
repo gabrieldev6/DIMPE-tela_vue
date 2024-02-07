@@ -95,7 +95,7 @@ export class Detector {
     tf.dispose(result)
     
     input.dispose()
-    
+    // console.log(tf.memory())
 
     
     const detections = non_max_suppression(res)

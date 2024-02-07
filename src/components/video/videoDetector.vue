@@ -37,6 +37,12 @@ const LISTENERS: Record<string, Function> = {
   },
   result(_: any, boxes: BoundingBox[]) {
     boundingBoxes = boxes
+    // boundingBoxes.map(box => {
+      
+    //   console.log(box.label)
+      
+    // })
+    
   },
   ready: () => {
     
@@ -196,6 +202,7 @@ watch(input, async (input: any) => {
 }, {immediate: true})
 
 
+
 </script>
   
 <template>
@@ -231,6 +238,9 @@ watch(input, async (input: any) => {
       
     </div>
 
+  </div>
+  <div>
+    <canvas ref="canvas2" class="w-100px h-60px"></canvas>
   </div>
 </template>
 

@@ -1,18 +1,55 @@
-# Vue 3 + TypeScript + Vite
+# DIMPE - Software de Monitoramento
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+O **DIMPE** é um software avançado projetado para monitoramento de áreas de seguranaça e controle de pragas em plantações. Utilizando imagens de drone, o DIMPE oferece uma solução eficaz para monitorar vastas extensões de terra e garantir a segurança e saúde. 
 
-## Recommended IDE Setup
+## Recursos Principais
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+* **Monitoramento em Tempo Real**: O DIMPE permite o monitoramento contínuo de áreas de segurança e plantações em tempo real, proporcionando uma visão abrangete do terreno.
+* **Análise Avançada de Imagens:**: Com algoritmos de visão computacional de última geração, o DIMPE analisa as imagens dos dos drones para identificar padrões, detectar intrusos e pragas com precisão.
 
-## Type Support For `.vue` Imports in TS
+* **Controle de Pragas Integrado**:  Além do monitoramento, o DIMPE oferece funcionalidades de controle de pragas, permitindo a identificação e tratamento rápido de infestações, minimizando danos às plantações.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+* **Interface Intuitiva**: Com uma interface de usuário intuitiva e amigável, o DIMPE é acessível a usuários de todos os níveis de habilidade, facilitando a navegação e utilização do software.
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+## Como Utilizar
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+1. **Configuração do Drone:** Antes de começar, certifique-se de configurar o drone de acordo com as especificações do DIMPE e garantir uma conexão estável.
+
+2. **Iniciar Monitoramento:** Inicie o software DIMPE e conecte-se ao drone. Selecione a área que deseja monitorar e inicie o processo de monitoramento.
+
+3. **Análise e Controle:** Assim que as imagens forem capturadas, o DIMPE realizará análises automáticas para detectar qualquer atividade suspeita ou sinais de infestação de pragas. Com base nessas análises, você pode tomar medidas adequadas para garantir a segurança da área monitorada.
+
+4. **Relatórios e Histórico:** O DIMPE mantém um registro detalhado de todas as atividades de monitoramento, incluindo relatórios de análise de imagem e histórico de tratamento de pragas, fornecendo insights valiosos para futuras ações.
+
+## Requisitos do Sistema
+
+- **Sistema Operacional**: Windows, macOS, Linux.
+- **Hardware**: Drone compatível, computador com capacidade de processamento adequada para análise de imagens.
+* **requisito minimo**:
+* CPU: 2 core
+* GPU: 1 gb
+
+## Instalação
+
+1. Faça o download dos arquivos no repositorio.
+2. No terminal execute o codigo a baixo para instalar as dependencias:
+
+```shell
+   npm install
+```
+3. Execute o comando a baixo para rodar em seu navegador:
+
+```shell
+   npm run dev
+```
+**Observação:** para ter acesso ao menu principal é necessario que faça login com a conta do google, e alem disso deve ser criado uma chave de ID_CLIENTE que é fornecida no google clound
+
+## Contribuições
+
+Contribuições para o desenvolvimento do DIMPE são bem-vindas! Sinta-se à vontade para enviar pull requests ou relatar problemas no repositório oficial do GitHub.
+
+## Contato
+Para mais informações ou suporte, entre em contato pelo email:
+
+* gabriel.christ.silva@gmail.com
+

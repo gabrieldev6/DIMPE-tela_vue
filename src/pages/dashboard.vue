@@ -8,7 +8,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { RouterLink } from 'vue-router';
 
-import logo from "../assets/loremIpson1.png"
+import logo from "../assets/logoDimpe.png"
 import { googleLogout } from 'vue3-google-login';
 
 // import { decodeCredential } from 'vue3-google-login';
@@ -45,8 +45,8 @@ const logout = () => {
     <div class="h-full w-full flex">
     <!-- sadbar -->
     <div class="h-full w-20% max-w-225px min-w-144px  bg-white shadow-2xl z-10 px-4 ">
-      <ul class="list-none py-4">
-        <li><img :src="logo" alt=""></li>
+      <ul class="list-none py-4 ">
+        <li><img :src="logo" alt="" class="w-120px px-5"></li>
 
         <li class="py-4">
           <div class="border-solid border-2 border-gray-400 rounded-2 flex justify-between items-center">

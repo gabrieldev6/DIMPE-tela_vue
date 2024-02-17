@@ -40,9 +40,10 @@ export class Detector {
 
   /**
    * Carrega o modelo
-   * @param model Modelo a ser carregado
+   * @param model Modelo a ser carregado/ arquivo que ta na pasta public
    * @param onProgress Callback de progresso
    */
+
   static async loadModel(model: string, onProgress: (progress: number) => void) {
     const yolov7 = await tf.loadGraphModel(model, {
       onProgress: (fraction) => {

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import * as tf from '@tensorflow/tfjs'
 
-import { computed, onUnmounted, ref, watch, watchEffect } from 'vue';
+import { computed,  onUnmounted, ref, watch, watchEffect } from 'vue';
 import { BoundingBox } from '../../core/Detector';
 import DetectorWorker from '../../core/worker?worker'
 import { useDevicesList, useLocalStorage } from '@vueuse/core'
-
+// import { watch } from 'vue'
 import Loading from "../loading/loading.vue"
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -23,7 +23,7 @@ let erro = ref<boolean>(false)
 
 const worker = new DetectorWorker()
 let boundingBoxes: BoundingBox[] = []
-
+let dateBoundingBoxes = ref<Array<any>>([])
 const input = useLocalStorage('input', '')
 
 watchEffect(() => {
@@ -37,23 +37,39 @@ const LISTENERS: Record<string, Function> = {
   },
   result(_: any, boxes: BoundingBox[]) {
     boundingBoxes = boxes
-    // boundingBoxes.map(box => {
-      
-    //   console.log(box.label)
-      
-    // })
-    
+
+    // vai rastrear os valores que sao encontrados
+    dateBoundingBoxes.value = boxes 
   },
   ready: () => {
     
     ready.value = true
     loop()
+    // loop2()
   }
 }
 
-worker.addEventListener('message', (e: any) => {
-  const [event, ...args] = e.data
+watch(dateBoundingBoxes,(dateBoundingBoxes)=> {
+  if(dateBoundingBoxes.length != 0) {
+    console.log(dateBoundingBoxes)
+    if (!canvas2.value || !camera || !ctx2.value) {
+    return
+  }
 
+  canvas2.value!.width = video.videoWidth
+  canvas2.value!.height = video.videoHeight
+
+  const draw = ctx2.value;
+  draw.clearRect(0, 0, canvas2.value.width, canvas2.value.height)
+  draw.drawImage(video, 0, 0)
+  }
+  
+})
+
+worker.addEventListener('message', (e: any) => {
+  // desestrutura para receber o nome da função e os argumentos
+  const [event, ...args] = e.data
+  
   if (event in LISTENERS) {
     LISTENERS[event](e, ...args)
   }
@@ -70,7 +86,10 @@ video.play()
 
 const progress = ref(0)
 const canvas = ref<HTMLCanvasElement>()
+const canvas2 = ref<HTMLCanvasElement>()
+
 const ctx = computed(() => canvas.value?.getContext('2d'))
+const ctx2 = computed(() => canvas2.value?.getContext('2d'))
 const ready = ref(false)
 
 let nextFrame: number
@@ -91,7 +110,20 @@ const BOX_STYLE = {
     }
   }
 }
+// async function loop2() {
+//   nextFrame = requestAnimationFrame(loop2)
 
+//   if (!canvas2.value || !camera || !ctx2.value) {
+//     return
+//   }
+
+//   canvas2.value!.width = video.videoWidth
+//   canvas2.value!.height = video.videoHeight
+
+//   const draw = ctx2.value;
+//   draw.clearRect(0, 0, canvas2.value.width, canvas2.value.height)
+//   draw.drawImage(video, 0, 0)
+// }
 // Loop de renderização do canvas
 async function loop() {
   nextFrame = requestAnimationFrame(loop)

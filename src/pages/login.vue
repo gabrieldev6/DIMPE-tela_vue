@@ -65,7 +65,7 @@ const validacao = (response: any) => {
 </script>
 
 <template>
-    <div class="flex justify-center items-center text-center bg-gray-700 w-full h-full">
+    <div class="flex justify-center items-center text-center bg-gray-200 w-full h-full">
         <div class="bg-white flex w-200 h-120 rounded-xl">
             <img :src="logo" alt="imagem meramente ilustrativa" class="w-120 rounded-xl shadow-xl shadow-gray-400">
             <div class="w-full px-10 py-5 flex justify-center">

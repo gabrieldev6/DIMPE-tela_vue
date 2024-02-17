@@ -25,11 +25,11 @@ const LISTENERS: Record<string, Function> = {
       globalThis.postMessage(['progress', progress])
     })
 
-    
+    ready = true
 
     // Informa a interface que o Worker está pronto
     globalThis.postMessage(['ready'])
-    ready = true
+    
     // Inicia o loop de processamento
     loop()
   },

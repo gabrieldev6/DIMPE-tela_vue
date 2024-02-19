@@ -271,7 +271,7 @@ watch(input, async (input: any) => {
     </div>
 
   </div>
-  <div>
+  <div class="bg-white rounded-2 p4 w-200px">
     <canvas ref="canvas2" class="w-100px h-60px"></canvas>
   </div>
 </template>

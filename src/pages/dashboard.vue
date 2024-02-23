@@ -44,13 +44,13 @@ const logout = () => {
   <template v-if="$route.query.token">
     <div class="h-full w-full flex">
     <!-- sadbar -->
-    <div class="h-full w-20% max-w-225px min-w-144px  bg-white shadow-2xl z-10 px-4 ">
+    <div class="h-full min-w-240px bg-white shadow-2xl z-10 px-4 ">
       <ul class="list-none py-4 ">
         <li><img :src="logo" alt="" class="w-120px px-5"></li>
 
         <li class="py-4">
           <div class="border-solid border-2 border-gray-400 rounded-2 flex justify-between items-center">
-            <font-awesome-icon icon="fa-solid fa-magnifying-glass" class="p-1 text-gray-500 " />
+            <font-awesome-icon icon="fa-solid fa-magnifying-glass" class="ml-4 text-gray-500 " />
             <input class="border-4 p-2 text-4 rounded-2 focus:outline-none w-80%" type="text" placeholder="Search">
           </div>
         </li>
@@ -60,7 +60,7 @@ const logout = () => {
             :to="{ name: 'video', query: { nome: $route.query.nome, token: $route.query.token, picture: $route.query.picture } }"
             class="no-underline ">
             <button type="submit"
-              class=" bg-white shadow hover:shadow-md w-full flex text-4 flex items-center text-center my-1 p-2 rounded-2 text-gray-500">
+              class=" bg-white shadow hover:shadow-md w-full flex text-4 flex items-center text-center my-1 p-2 rounded-2 text-gray-500 border-solid border-l-4 border-l-blue-500">
 
               <font-awesome-icon icon="fa-solid fa-table-columns" class="mx-2" />
               Dashboard
@@ -73,7 +73,7 @@ const logout = () => {
             :to="{ name: 'analitico', query: { nome: $route.query.nome, token: $route.query.token, picture: $route.query.picture } }"
             class="no-underline">
             <button type="submit"
-              class=" bg-white shadow hover:shadow-md w-full flex text-4  flex items-center text-center my-1 p-2 rounded-2  text-gray-500">
+              class=" bg-white shadow hover:shadow-md w-full flex text-4  flex items-center text-center my-1 p-2 rounded-2  text-gray-500 border-solid border-l-4 border-l-blue-500">
               <font-awesome-icon icon="fa-solid fa-chart-line" class="mx-2 " />
               Analitico
             </button>
@@ -81,7 +81,7 @@ const logout = () => {
         </li>
         <li>
           <button type="submit"
-            class=" bg-white w-full flex text-4 shadow hover:shadow-md text-gray-500 items-center text-center my-1 p-2 rounded-2">
+            class=" bg-white w-full flex text-4 shadow hover:shadow-md text-gray-500 items-center text-center my-1 p-2 rounded-2 border-solid border-l-4 border-l-blue-500">
             <font-awesome-icon icon="fa-solid fa-toolbox" class="mx-2" />
             Opções
           </button>
@@ -90,7 +90,7 @@ const logout = () => {
         <li>
           <router-link :to="{name: 'login'}" @click="logout" class="no-underline">
             <button type="submit"
-            class=" bg-white w-full flex text-4 shadow hover:shadow-md text-gray-500 items-center text-center my-1 p-2 rounded-2">
+            class=" bg-white w-61 flex text-4 shadow hover:shadow-md text-gray-500 items-center text-center my-1 p-2 rounded-2 border-solid border-l-4 border-l-blue-500 absolute bottom-8">
             <font-awesome-icon icon="fa-solid fa-right-from-bracket" class="mx-2" />
             sair da conta
           </button>
@@ -111,7 +111,7 @@ const logout = () => {
         <h2>{{ saudacoes }} {{ $route.query.nome }}</h2>
         <div class="flex justify-center items-center">
           <font-awesome-icon icon="fa-solid fa-gear" class="color-gray h-25px w-25px mx-20px" />
-          <a href="">
+          
             <router-link :to="{ name: 'perfil', query: { nome: $route.query.nome, picture: $route.query.picture, token: $route.query.token} }">
               <div class=" rounded-full shadow-md w-40px h-40px flex justify-center items-center">
                 <font-awesome-icon v-if="!$route.query.picture" icon="fa-solid fa-user"
@@ -121,7 +121,7 @@ const logout = () => {
               </div>
             </router-link>
 
-          </a>
+          
         </div>
 
       </div>

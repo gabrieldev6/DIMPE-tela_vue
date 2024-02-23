@@ -1,13 +1,17 @@
 <script lang="ts" setup>
-import * as tf from '@tensorflow/tfjs'
+// funções auxiliares
+import { computed, onUnmounted, ref, watch, watchEffect } from 'vue';
+import { useDevicesList, useLocalStorage } from '@vueuse/core'
 
-import { computed,  onUnmounted, ref, watch, watchEffect } from 'vue';
+// tensorflow
+import * as tf from '@tensorflow/tfjs'
 import { BoundingBox } from '../../core/Detector';
 import DetectorWorker from '../../core/worker?worker'
-import { useDevicesList, useLocalStorage } from '@vueuse/core'
-// import { watch } from 'vue'
-import Loading from "../loading/loading.vue"
 
+// componentes
+import Loading from "../loading/loading.vue"
+import api from "../../service/api"
+// icones
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 // pede permissão e lista os dispositivos de video
@@ -21,10 +25,60 @@ const { videoInputs } = useDevicesList({
 // se a camera nao puder ser aberta ele gera um alerta de erro
 let erro = ref<boolean>(false)
 
+// timestamp para relatorio
+let primeiroTempo = ref<number>()
+let segundoTempo = ref<number>()
+let click = ref<boolean>(false)
+let descricao = ref<string>('Iniciar')
+let tempo = ref<number>(0)
+// Dados
+let listFrame = ref<Array<string>>([])
+let listBoundingBox = ref<Array<any>>([])
+
 const worker = new DetectorWorker()
 let boundingBoxes: BoundingBox[] = []
 let dateBoundingBoxes = ref<Array<any>>([])
+
 const input = useLocalStorage('input', '')
+// envia os dados coletados pela ia
+watch(click, (click: any) => {
+
+
+  if (click == true) {
+
+    primeiroTempo.value = Date.now()
+    descricao.value = "Parar"
+
+  } else if (click == false) {
+
+    segundoTempo.value = Date.now()
+
+    descricao.value = "Iniciar"
+    tempo.value = segundoTempo.value - primeiroTempo.value!
+
+    api.post("/listFrame", {
+
+      listFrame: listFrame.value,
+      listBoundingbox: listBoundingBox.value
+
+    }).then((response: any) => {
+
+      if (response.status == 200) {
+        console.log('sucesso')
+      }
+
+    })
+    // limpando variavel
+    tempo.value = 0
+    primeiroTempo.value = 0
+    segundoTempo.value = 0
+
+    listBoundingBox.value.splice(0)
+    listFrame.value.splice(0)
+    
+  }
+
+})
 
 watchEffect(() => {
   input.value ??= videoInputs.value[0]?.deviceId
@@ -39,37 +93,38 @@ const LISTENERS: Record<string, Function> = {
     boundingBoxes = boxes
 
     // vai rastrear os valores que sao encontrados
-    dateBoundingBoxes.value = boxes 
+    dateBoundingBoxes.value = boxes
   },
   ready: () => {
-    
+
     ready.value = true
     loop()
-    // loop2()
+
   }
 }
 
-watch(dateBoundingBoxes,(dateBoundingBoxes)=> {
-  if(dateBoundingBoxes.length != 0) {
-    console.log(dateBoundingBoxes)
+watch(dateBoundingBoxes, (dateBoundingBoxes) => {
+  if (dateBoundingBoxes.length != 0 && click.value==true ) {
+    listBoundingBox.value.push(dateBoundingBoxes)
     if (!canvas2.value || !camera || !ctx2.value) {
-    return
+      return
+    }
+
+    canvas2.value!.width = video.videoWidth
+    canvas2.value!.height = video.videoHeight
+
+    const draw = ctx2.value;
+    draw.clearRect(0, 0, canvas2.value.width, canvas2.value.height)
+    draw.drawImage(video, 0, 0)
+    listFrame.value.push(canvas2.value?.toDataURL('image/png', 0.5))
   }
 
-  canvas2.value!.width = video.videoWidth
-  canvas2.value!.height = video.videoHeight
-
-  const draw = ctx2.value;
-  draw.clearRect(0, 0, canvas2.value.width, canvas2.value.height)
-  draw.drawImage(video, 0, 0)
-  }
-  
 })
 
 worker.addEventListener('message', (e: any) => {
   // desestrutura para receber o nome da função e os argumentos
   const [event, ...args] = e.data
-  
+
   if (event in LISTENERS) {
     LISTENERS[event](e, ...args)
   }
@@ -110,20 +165,7 @@ const BOX_STYLE = {
     }
   }
 }
-// async function loop2() {
-//   nextFrame = requestAnimationFrame(loop2)
 
-//   if (!canvas2.value || !camera || !ctx2.value) {
-//     return
-//   }
-
-//   canvas2.value!.width = video.videoWidth
-//   canvas2.value!.height = video.videoHeight
-
-//   const draw = ctx2.value;
-//   draw.clearRect(0, 0, canvas2.value.width, canvas2.value.height)
-//   draw.drawImage(video, 0, 0)
-// }
 // Loop de renderização do canvas
 async function loop() {
   nextFrame = requestAnimationFrame(loop)
@@ -145,7 +187,7 @@ async function loop() {
   }])
 
   frame.dispose()
-  
+
 
   draw.drawImage(video, 0, 0)
 
@@ -212,18 +254,18 @@ watch(input, async (input: any) => {
     video: true,
     audio: false
   })
-  : await navigator.mediaDevices.getUserMedia({
-    video: {
-      deviceId: input
-    },
-    audio: false
-  }).catch(err => {
-    erro.value = true
-    
-    console.log(err)
-  })
+    : await navigator.mediaDevices.getUserMedia({
+      video: {
+        deviceId: input
+      },
+      audio: false
+    }).catch(err => {
+      erro.value = true
 
-  if(!camera) {
+      console.log(err)
+    })
+
+  if (!camera) {
     return
   }
   erro.value = false
@@ -231,7 +273,7 @@ watch(input, async (input: any) => {
   video.srcObject = camera
 
   video.play()
-}, {immediate: true})
+}, { immediate: true })
 
 
 
@@ -244,35 +286,54 @@ watch(input, async (input: any) => {
         <h3>Transmissão de imagem</h3>
         <select v-model="input" class="px-4 py-2 rounded-lg">
           <option disabled selected value="">Câmera</option>
-          <option v-for="device in videoInputs" :key="device.deviceId" :value="device.deviceId">{{device.label}}</option>
+          <option v-for="device in videoInputs" :key="device.deviceId" :value="device.deviceId">{{ device.label }}
+          </option>
           <option value="screen">Tela</option>
         </select>
       </div>
-      
-        <template v-if="!ready">
-          <div class="m-4px items-center w-full h-full ">
 
-            <Loading max="100" :progress="progress * 100" :ready="ready"></Loading>
-          </div>
-        </template>
+      <template v-if="!ready">
+        <div class="m-4px items-center w-full h-full ">
 
-        <canvas v-else ref="canvas" class="w-full max-w-600px"></canvas>
-        
-      
+          <Loading max="100" :progress="progress * 100" :ready="ready"></Loading>
+        </div>
+      </template>
+
+      <canvas v-else ref="canvas" class="w-full max-w-600px"></canvas>
+
+
     </div>
 
     <div v-if="erro" class="bg-red-600 rounded-2 p4 flex my-14px">
-      <font-awesome-icon icon="circle-exclamation" class="c-white h-20px w-20px"/>
+      <font-awesome-icon icon="circle-exclamation" class="c-white h-20px w-20px" />
       <div class="px2">
         <h4 class="text-white">Câmera nao disponivel</h4>
         <p class="text-white">Verifique se a camera esta conectada corretamente, ou se há erro no hardware</p>
       </div>
-      
+
     </div>
 
   </div>
-  <div class="bg-white rounded-2 p4 w-200px">
-    <canvas ref="canvas2" class="w-100px h-60px"></canvas>
+  <div>
+    <div class="bg-white rounded-2 px4 py2 w-350px h-50px mt-4 flex justify-between items-center">
+      <h5>Aperte Iniciar para gerar relatorio</h5>
+      <button @click="click = !click" class="shadow w-30%  p-2 hover:bg-blue-500 text-white bg-blue rounded-1">{{ descricao
+      }}</button>
+    </div>
+    <div class="bg-white rounded-2 p4 w-350px mt-4 ">
+      <h3 class="py-10px">Relatorio</h3>
+      <canvas ref="canvas2" class="bg-black w-350px h-230px rounded-1"></canvas>
+      <div class="bg-gray-200 flex justify-between px-4 mt1 rounded-1  text-gray-600">
+        <h5>Classe</h5>
+        <h5>Hora</h5>
+        <h5>Score</h5>
+      </div>
+      <div class="flex justify-between px-3 p-2 items-center">
+        <h5>Classe</h5>
+        <h5>Hora</h5>
+        <h5>Score</h5>
+      </div>
+    </div>
   </div>
 </template>
 

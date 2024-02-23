@@ -69,7 +69,7 @@ const validacao = (response: any) => {
         <div class="bg-white flex w-200 h-120 rounded-xl">
             <img :src="logo" alt="imagem meramente ilustrativa" class="w-120 rounded-xl shadow-xl shadow-gray-400">
             <div class="w-full px-10 py-5 flex justify-center">
-                <div>
+                <div class="w-full">
                     <h1 class="mt-4">Login</h1>
                     <h5 class="mb-13">Olá, seja bem vindo ao futuro!</h5>
 

@@ -4,7 +4,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import logo from '../assets/imgLogin.jpg'
-import { GoogleLogin } from 'vue3-google-login';
+
 import { ref } from 'vue';
 import api from '../service/api'
 library.add(fas);
@@ -70,7 +70,7 @@ const submit = () => {
             <img :src="logo" alt="imagem meramente ilustrativa" class="w-120 rounded-xl shadow-xl shadow-gray-400">
 
             <div class="w-full px-10 py-5 flex justify-center">
-                <div>
+                <div class="w-full">
                     <h1 class="mt-4">Crie uma conta</h1>
                     <h5 class="mb-7">Olá, seja bem vindo ao futuro!</h5>
 
@@ -108,7 +108,7 @@ const submit = () => {
                         </router-link>
                     </div>
 
-                    <GoogleLogin class="w-full m1"></GoogleLogin>
+                    
                 </div>
 
 

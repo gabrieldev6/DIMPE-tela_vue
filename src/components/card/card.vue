@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+// import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 </script>
 
 <template>
-    <div class="m-2 bg-white rounded-lg p3 m4 h-300px">
+    <div class="ml-4 mt-4 bg-white rounded-lg w-72 ">
 
-        <div class="flex justify-between py2 ">
+        
+
+
+        <canvas class="bg-black w-full h-180px rounded-t-lg"></canvas>
+        <div class="p4">
+            <div class="flex justify-between pb2 ">
             <div class="flex">
                 <div class="bg-gray rounded-full shadow-md w-40px h-40px flex justify-center items-center"></div>
                 <div class="px-2">
@@ -15,15 +20,13 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
                 </div>
             </div>
 
-            <button class="rounded-full w-40px bg-white hover:bg-gray-200 cursor-pointer flex items-center justify-center"><font-awesome-icon icon="fa-solid fa-trash" class="text-4"/></button>
+            
         </div>
-
-
-        <canvas class="bg-black w-250px h-180px rounded-1"></canvas>
-        <div class="flex ">
-            <button class="shadow w-30% mt-2 mr-3 p-2 hover:bg-blue-500 text-white bg-blue rounded-1">Analisar</button>
-            <button class="shadow w-30% mt-2 p-2 hover:bg-red-500 text-white bg-red rounded-1">Reportar</button>
+        <router-link :to="{name: 'relatorio', query: {nome: $route.query.nome, token: $route.query.token, picture: $route.query.picture}}">
+            <button class="shadow w-full  p-2 hover:bg-blue-500 text-white bg-blue rounded-1">Analisar</button>
+        </router-link>
         </div>
+        
         
     </div>
 </template>

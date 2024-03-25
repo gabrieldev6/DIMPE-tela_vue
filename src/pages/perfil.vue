@@ -4,26 +4,40 @@ import api from '../service/api';
 
 const img = ref()
 const imgSafeS = ref(false)
-const pegarValor = (event: any) => {
-    const file: Array<File> = event.target.files
-    const reader = new FileReader()
-    reader.onload = () => {
-        const base64String = reader.result
-        img.value = base64String
-        api.post("/imgUser", {
-            img: img.value
+const pegarValor = async (event: any) => {
 
-        }).then((response: any) => {
+    img.value = event.target.files[0]
+    console.log(img.value)
+    let formData = new FormData()
+    formData.append('image', img.value)
+    
+    console.log(formData)
+    await api.post("/imgUser", formData, {
+        'headers': {
+            'Content-Type': 'multipart/form-data'
+        }}
+            ).then((response: any) => {
             if (response.status == 200) {
+                console.log(response.data)
                 imgSafeS.value = true
             }
 
-        })
-    }
-    reader.onerror = error => {
-        console.log(error)
-    }
-    reader.readAsDataURL(file[0])
+            }).catch((err)=> {
+                console.log(err)
+            })
+    // const file: Array<File> = event.target.files
+    
+    //     const reader = new FileReader()
+
+    // reader.onload = async () => {
+    //     const base64String = reader.result
+    //     img.value = base64String
+    //     )
+    // }
+    // reader.onerror = error => {
+    //     console.log(error)
+    // }
+    // reader.readAsDataURL(file[0])
 
 }
 
@@ -34,7 +48,9 @@ const pegarValor = (event: any) => {
             <div class="w-full">
                 <div class="w-full flex justify-around items-center ">
                     <div class="rounded-full shadow-md w-150px h-150px flex justify-between items-center">
-                        <img :src="$route.query.picture" alt="foto do perfil" class="color-gray w-full h-full rounded-full">
+                        <img alt="foto do perfil" class="color-gray w-full h-full rounded-full">
+                        <!-- <img :src="$route.query.picture" alt="foto do perfil" class="color-gray w-full h-full rounded-full"> -->
+                    
                     </div>
                     <div>
                         <h1>{{ $route.query.nome }}</h1>
@@ -42,7 +58,7 @@ const pegarValor = (event: any) => {
                             <label for="inputFoto"
                                 class="shadow w-full p-1 hover:bg-blue-500 text-white bg-blue rounded-1 ">Trocar foto de
                                 perfil</label>
-                            <input @change="pegarValor" id="inputFoto" type="file" class="hidden">
+                            <input @change="pegarValor" name="image" id="inputFoto" type="file" class="hidden">
                         </div>
                         <p v-if="imgSafeS" class="text-red-500">imagem salva com sucesso</p>
                     </div>

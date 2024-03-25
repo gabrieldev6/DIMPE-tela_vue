@@ -38,6 +38,11 @@ const router = createRouter({
           component: () => import('./components/video/videoDetector.vue')
     
         },
+        {
+          path: '/relatorio',
+          name: 'relatorio',
+          component: () => import('./components/relatorio/relatorio.vue')
+        }
       ]
 
     },

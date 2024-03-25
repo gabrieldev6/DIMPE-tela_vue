@@ -92,7 +92,7 @@ const logout = () => {
             <button type="submit"
             class=" bg-white w-61 flex text-4 shadow hover:shadow-md text-gray-500 items-center text-center my-1 p-2 rounded-2 border-solid border-l-4 border-l-blue-500 absolute bottom-8">
             <font-awesome-icon icon="fa-solid fa-right-from-bracket" class="mx-2" />
-            sair da conta
+            Sair da conta
           </button>
           </router-link>
           
@@ -106,7 +106,7 @@ const logout = () => {
     <div class="w-full">
 
       <!-- barra superior -->
-      <div class="flex bg-white h-8%  justify-between items-center px-4">
+      <div class="flex bg-white h-8% justify-between items-center px-4">
 
         <h2>{{ saudacoes }} {{ $route.query.nome }}</h2>
         <div class="flex justify-center items-center">
@@ -114,10 +114,10 @@ const logout = () => {
           
             <router-link :to="{ name: 'perfil', query: { nome: $route.query.nome, picture: $route.query.picture, token: $route.query.token} }">
               <div class=" rounded-full shadow-md w-40px h-40px flex justify-center items-center">
-                <font-awesome-icon v-if="!$route.query.picture" icon="fa-solid fa-user"
+                <font-awesome-icon  icon="fa-solid fa-user"
                   class="color-gray h-20px w-20px m-1" />
-                <img v-else="$route.query.picture" :src="$route.query.picture" alt="perfil"
-                  class="color-gray w-40px h-40px rounded-full" />
+                
+                <!-- <img v-else="$route.query.picture" alt="perfil" class="color-gray w-40px h-40px rounded-full" /> -->
               </div>
             </router-link>
 
@@ -127,7 +127,7 @@ const logout = () => {
       </div>
 
       <!-- visualição das rotas -->
-      <div class="flex bg-gray-200 border-4 h-92%">
+      <div class="flex flex-wrap bg-gray-200 border-4 w-full h-92% overflow-y-scroll">
 
 
         <RouterView />

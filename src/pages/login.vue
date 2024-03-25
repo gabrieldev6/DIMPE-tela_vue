@@ -35,8 +35,10 @@ let submit = async () => {
                 router.push({ name: 'dashboard', query: { nome: response.data.user.nome, token: response.data.token } })
 
             } else {
+            
                 response.value = true
             }
+            console.log(response.data)
 
 
         })

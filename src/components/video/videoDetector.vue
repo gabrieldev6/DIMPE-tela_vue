@@ -32,7 +32,7 @@ let click = ref<boolean>(false)
 let descricao = ref<string>('Iniciar')
 let tempo = ref<number>(0)
 // Dados
-let listFrame = ref<Array<string>>([])
+let listFrame = ref<File>()
 let listBoundingBox = ref<Array<any>>([])
 
 const worker = new DetectorWorker()
@@ -74,8 +74,8 @@ watch(click, (click: any) => {
     segundoTempo.value = 0
 
     listBoundingBox.value.splice(0)
-    listFrame.value.splice(0)
-    
+
+
   }
 
 })
@@ -104,8 +104,12 @@ const LISTENERS: Record<string, Function> = {
 }
 
 watch(dateBoundingBoxes, (dateBoundingBoxes) => {
-  if (dateBoundingBoxes.length != 0 && click.value==true ) {
-    listBoundingBox.value.push(dateBoundingBoxes)
+  if (dateBoundingBoxes.length != 0 && click.value == true) {
+    let dataNow = `frame_${Date.now()}`
+
+    
+
+
     if (!canvas2.value || !camera || !ctx2.value) {
       return
     }
@@ -116,7 +120,40 @@ watch(dateBoundingBoxes, (dateBoundingBoxes) => {
     const draw = ctx2.value;
     draw.clearRect(0, 0, canvas2.value.width, canvas2.value.height)
     draw.drawImage(video, 0, 0)
-    listFrame.value.push(canvas2.value?.toDataURL('image/png', 0.5))
+
+    const dataURL = canvas2.value.toDataURL('image/png')
+
+    fetch(dataURL).then(res => res.blob()).then(blob => {
+
+      const arquivo = new File([blob], `${dataNow}`, { type: 'image/png', })
+      listFrame.value = arquivo
+      let formData = new FormData()
+
+      formData.append('image', arquivo)
+      console.log(formData)
+      api.post('/frame', formData, {
+        'headers': {
+          "Content-Type": 'multipart/form-data'
+        }
+
+      }).then((response: any) => {
+
+        if (response.status == 200) {
+          console.log(response.data)
+        }
+
+      }).catch((err) => {
+
+        console.log(err)
+      })
+
+      api.post('/listBoundingBox', { list: dateBoundingBoxes, dataNow: dataNow })
+      .then((response) => {
+        console.log(response.status)
+      })
+    })
+
+
   }
 
 })
@@ -278,9 +315,9 @@ watch(input, async (input: any) => {
 
 
 </script>
-  
+
 <template>
-  <div class="p4">
+  <div class="ml-4 mt-4">
     <div class="items-center bg-white p4 rounded-2 w-600px min-w-600px h-490px min-h-450px">
       <div class="flex w-full my-5px justify-between text-center items-center">
         <h3>Transmissão de imagem</h3>
@@ -314,11 +351,12 @@ watch(input, async (input: any) => {
     </div>
 
   </div>
-  <div>
-    <div class="bg-white rounded-2 px4 py2 w-350px h-50px mt-4 flex justify-between items-center">
+  <div class="ml-4 mt-4">
+    <div class="bg-white rounded-2 px4 py2 w-350px h-50px flex justify-between items-center">
       <h5>Aperte Iniciar para gerar relatorio</h5>
-      <button @click="click = !click" class="shadow w-30%  p-2 hover:bg-blue-500 text-white bg-blue rounded-1">{{ descricao
-      }}</button>
+      <button @click="click = !click" class="shadow w-30%  p-2 hover:bg-blue-500 text-white bg-blue rounded-1">{{
+          descricao
+        }}</button>
     </div>
     <div class="bg-white rounded-2 p4 w-350px mt-4 ">
       <h3 class="py-10px">Relatorio</h3>
@@ -336,5 +374,3 @@ watch(input, async (input: any) => {
     </div>
   </div>
 </template>
-
-

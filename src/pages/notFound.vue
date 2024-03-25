@@ -2,7 +2,7 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import img from '../assets/drone1.jpg'
+
 library.add(fas);
 
 

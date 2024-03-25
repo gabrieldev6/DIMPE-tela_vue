@@ -62,7 +62,7 @@ async function loop() {
   while (ready) {
     // Se não houver um frame para processar, espera 1 segundo e tenta novamente
     if (!nextTensor) {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 500))
       continue;
     }
 
@@ -84,6 +84,6 @@ async function loop() {
     tf.dispose(nextTensor)
     
     // Aguarda 1/30 de segundo para processar o próximo frame
-    await new Promise((resolve) => setTimeout(resolve, 1000 / 30))
+    await new Promise((resolve) => setTimeout(resolve, 1000 / 60))
   }
 }

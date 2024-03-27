@@ -25,19 +25,6 @@ const pegarValor = async (event: any) => {
             }).catch((err)=> {
                 console.log(err)
             })
-    // const file: Array<File> = event.target.files
-    
-    //     const reader = new FileReader()
-
-    // reader.onload = async () => {
-    //     const base64String = reader.result
-    //     img.value = base64String
-    //     )
-    // }
-    // reader.onerror = error => {
-    //     console.log(error)
-    // }
-    // reader.readAsDataURL(file[0])
 
 }
 

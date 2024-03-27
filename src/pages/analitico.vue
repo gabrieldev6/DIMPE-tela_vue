@@ -5,7 +5,7 @@ import Card from '../components/card/card.vue'
 
 </script>
 <template>
-    <div class="h-100% w-100% flex flex-wrap items-start">
+    <div class=" w-100% h-30% flex flex-wrap ">
         
             <Card></Card>
             <Card></Card>

@@ -26,11 +26,9 @@ const { videoInputs } = useDevicesList({
 let erro = ref<boolean>(false)
 
 // timestamp para relatorio
-let primeiroTempo = ref<number>()
-let segundoTempo = ref<number>()
 let click = ref<boolean>(false)
 let descricao = ref<string>('Iniciar')
-let tempo = ref<number>(0)
+
 // Dados
 let listFrame = ref<File>()
 let listBoundingBox = ref<Array<any>>([])
@@ -45,22 +43,14 @@ watch(click, (click: any) => {
 
 
   if (click == true) {
-
-    primeiroTempo.value = Date.now()
     descricao.value = "Parar"
 
   } else if (click == false) {
-
-    segundoTempo.value = Date.now()
-
     descricao.value = "Iniciar"
-    tempo.value = segundoTempo.value - primeiroTempo.value!
+    
 
     api.post("/listFrame", {
-
-      listFrame: listFrame.value,
-      listBoundingbox: listBoundingBox.value
-
+      tempo: new Date()
     }).then((response: any) => {
 
       if (response.status == 200) {
@@ -69,10 +59,6 @@ watch(click, (click: any) => {
 
     })
     // limpando variavel
-    tempo.value = 0
-    primeiroTempo.value = 0
-    segundoTempo.value = 0
-
     listBoundingBox.value.splice(0)
 
 
@@ -106,9 +92,6 @@ const LISTENERS: Record<string, Function> = {
 watch(dateBoundingBoxes, (dateBoundingBoxes) => {
   if (dateBoundingBoxes.length != 0 && click.value == true) {
     let dataNow = `frame_${Date.now()}`
-
-    
-
 
     if (!canvas2.value || !camera || !ctx2.value) {
       return
@@ -291,6 +274,7 @@ watch(input, async (input: any) => {
     video: true,
     audio: false
   })
+  // se for escolhido a tela vai pegar imagem da tela
     : await navigator.mediaDevices.getUserMedia({
       video: {
         deviceId: input

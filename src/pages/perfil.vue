@@ -4,6 +4,7 @@ import api from '../service/api';
 
 const img = ref()
 const imgSafeS = ref(false)
+// const props = defineProps(['nome'])
 const pegarValor = async (event: any) => {
 
     img.value = event.target.files[0]
@@ -40,7 +41,7 @@ const pegarValor = async (event: any) => {
                     
                     </div>
                     <div>
-                        <h1>{{ $route.query.nome }}</h1>
+                        <h1>{{ $route.params.nome }}</h1>
                         <div class="py-3 w-full flex ">
                             <label for="inputFoto"
                                 class="shadow w-full p-1 hover:bg-blue-500 text-white bg-blue rounded-1 ">Trocar foto de

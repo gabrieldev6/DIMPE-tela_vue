@@ -47,7 +47,7 @@ watch(click, (click: any) => {
 
   } else if (click == false) {
     descricao.value = "Iniciar"
-    
+
 
     api.post("/listFrame", {
       tempo: new Date()
@@ -131,9 +131,9 @@ watch(dateBoundingBoxes, (dateBoundingBoxes) => {
       })
 
       api.post('/listBoundingBox', { list: dateBoundingBoxes, dataNow: dataNow })
-      .then((response) => {
-        console.log(response.status)
-      })
+        .then((response) => {
+          console.log(response.status)
+        })
     })
 
 
@@ -274,7 +274,7 @@ watch(input, async (input: any) => {
     video: true,
     audio: false
   })
-  // se for escolhido a tela vai pegar imagem da tela
+    // se for escolhido a tela vai pegar imagem da tela
     : await navigator.mediaDevices.getUserMedia({
       video: {
         deviceId: input
@@ -302,7 +302,9 @@ watch(input, async (input: any) => {
 
 <template>
   <div class="ml-4 mt-4">
-    <div class="items-center bg-white p4 rounded-2 w-600px min-w-600px h-490px min-h-450px">
+
+<!-- min-w-900px min-h-450px -->
+    <div class="items-center bg-white p4 rounded-2 w-750px h-600px "> 
       <div class="flex w-full my-5px justify-between text-center items-center">
         <h3>Transmissão de imagem</h3>
         <select v-model="input" class="px-4 py-2 rounded-lg">
@@ -320,24 +322,18 @@ watch(input, async (input: any) => {
         </div>
       </template>
 
-      <canvas v-else ref="canvas" class="w-full max-w-600px"></canvas>
+      <canvas v-else ref="canvas" class="w-100% "></canvas>
 
 
     </div>
 
-    <div v-if="erro" class="bg-red-600 rounded-2 p4 flex my-14px">
-      <font-awesome-icon icon="circle-exclamation" class="c-white h-20px w-20px" />
-      <div class="px2">
-        <h4 class="text-white">Câmera nao disponivel</h4>
-        <p class="text-white">Verifique se a camera esta conectada corretamente, ou se há erro no hardware</p>
-      </div>
-
-    </div>
+    
 
   </div>
+
   <div class="ml-4 mt-4">
     <div class="bg-white rounded-2 px4 py2 w-350px h-50px flex justify-between items-center">
-      <h5>Aperte Iniciar para gerar relatorio</h5>
+      <h5>Aperte iniciar para gerar relatorio</h5>
       <button @click="click = !click" class="shadow w-30%  p-2 hover:bg-blue-500 text-white bg-blue rounded-1">{{
           descricao
         }}</button>
@@ -356,5 +352,15 @@ watch(input, async (input: any) => {
         <h5>Score</h5>
       </div>
     </div>
+
+    <div v-if="erro" class="bg-red-600 rounded-2 p-4 w-350px flex my-14px">
+      <font-awesome-icon icon="circle-exclamation" class="c-white h-20px w-20px" />
+      <div class="px2">
+        <h3 class="text-white ">Câmera não disponivel</h3>
+        <p class="text-white ">Verifique se a camera esta conectada corretamente, ou se há erro no hardware</p>
+      </div>
+
+    </div>
   </div>
+  
 </template>

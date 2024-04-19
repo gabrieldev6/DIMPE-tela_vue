@@ -106,13 +106,13 @@ const logout = () => {
     <div class="w-full">
 
       <!-- barra superior -->
-      <div class="flex bg-white h-8% justify-between items-center px-4">
+      <div class="flex bg-white h-8% drop-shadow-md justify-between items-center px-4">
 
         <h2>{{ saudacoes }} {{ $route.query.nome }}</h2>
         <div class="flex justify-center items-center">
           <font-awesome-icon icon="fa-solid fa-gear" class="color-gray h-25px w-25px mx-20px" />
           
-            <router-link :to="{ name: 'perfil', query: { nome: $route.query.nome, picture: $route.query.picture, token: $route.query.token} }">
+            <router-link :to="{ name: 'perfil', query: { nome: $route.query.nome, picture: $route.query.picture, token: $route.query.token}}" :props="{nome: $route.query.nome}">
               <div class=" rounded-full shadow-md w-40px h-40px flex justify-center items-center">
                 <font-awesome-icon  icon="fa-solid fa-user"
                   class="color-gray h-20px w-20px m-1" />

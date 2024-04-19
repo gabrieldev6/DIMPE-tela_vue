@@ -1,9 +1,9 @@
 <script setup lang="ts" props="props">
-import { defineProps } from 'vue';
 
 
-const props = defineProps(['data', 'nome']) //
 
+const props = defineProps(['data', 'id']) 
+console.log(props)
 function fetchListFrame() {
     
    
@@ -24,7 +24,7 @@ function fetchListFrame() {
             <div class="flex">
                 <div class="bg-gray rounded-full shadow-md w-40px h-40px flex justify-center items-center"></div>
                 <div class="px-2">
-                    <h4 class="">Nome</h4>
+                    <h4 class="">{{props.id}}</h4>
                     <h6>{{props.data}}</h6>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // import { RouterView } from 'vue-router'
 // import { ref, Transition } from 'vue'
-;
+
 import { watchEffect, ref } from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';

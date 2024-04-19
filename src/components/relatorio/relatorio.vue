@@ -16,7 +16,7 @@ function voltar() {
 
 }
 watchEffect(() => {
-    let numberList = 1
+    let numberList = 10
 
     api.get(`/getFrame/${numberList}`
 

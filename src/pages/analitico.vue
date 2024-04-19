@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { watchEffect, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import Card from '../components/card/card.vue'
 import api from '../service/api';
 
 let listsFrames = ref<Array<any>>([])
 
-watchEffect(()=> {
-    api.get('/getListsframes').then((response)=> {
+onMounted(async ()=> {
+    const response = await api.get('/getListsframes').then((response)=> {
         if(response.status == 200) {
             response.data.listFrame.forEach((list: any)=> {
                 
@@ -16,7 +16,7 @@ watchEffect(()=> {
             })
         }
     })
-    
+    console.log(`response: ${response}`)
     
 })
 
@@ -25,7 +25,7 @@ watchEffect(()=> {
 <template>
     <div class=" w-100% h-30% flex flex-wrap ">
         
-            <Card v-for="list in listsFrames" :key="list.id_list" :data="list.data"></Card>
+            <Card v-for="list in listsFrames" :key="list.id_list" :data="list.data" :id="list.id_list"></Card>
             
        
 

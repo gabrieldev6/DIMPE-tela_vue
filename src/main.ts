@@ -13,7 +13,7 @@ const app = createApp(App)
 app.use(router).mount("#app")
 
 app.use(vue3GoogleLogin, {
-    clientId: import.meta.env.VITE_ID_CLIENTE 
+    clientId: "121230697941-4ekr8g7bk6g1ihg1ejhjtq6j3pu3g9qq.apps.googleusercontent.com" //import.meta.env.VITE_ID_CLIENTE |
 })
 crossOriginIsolated=false
 

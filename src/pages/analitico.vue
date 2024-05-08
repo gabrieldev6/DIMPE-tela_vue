@@ -3,11 +3,6 @@ import { onMounted, ref } from 'vue';
 import Card from '../components/card/card.vue'
 import api from '../service/api';
 
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-
-library.add(fas);
 
 let listsFrames = ref<Array<any>>([])
 

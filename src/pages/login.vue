@@ -5,10 +5,12 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { ref } from 'vue'
 import logo from '../assets/imgLogin2.jpg'
 
+
+
 import { GoogleLogin, decodeCredential } from 'vue3-google-login';
 import api from '../service/api.ts'
 
-import {userData} from '../types/user'
+import { userData } from '../types/user'
 import router from '../router';
 
 
@@ -21,7 +23,7 @@ let campoNull = ref<boolean>(false)
 
 // login feito pelo backend
 let submit = async () => {
-    
+
     // valida se os campos nao estao vazios
     if (email.value != '' && senha.value != '') {
         api.post("/login", {
@@ -29,20 +31,20 @@ let submit = async () => {
             senha: senha.value
 
         }).then((response: any) => {
-            
+
             if (response.status == 200) {
 
                 router.push({ name: 'dashboard', query: { nome: response.data.user.nome, token: response.data.token } })
 
             } else {
-            
+
                 response.value = true
             }
             console.log(response.data)
 
 
         })
-    // se estiver vazio vai gerar um alerta
+        // se estiver vazio vai gerar um alerta
     } else {
         campoNull.value = true
     }
@@ -51,16 +53,20 @@ let submit = async () => {
 }
 // pega os dados de nome, token e foto do usario que logou com a conta do google
 const validacao = (response: any) => {
-    
+
     if (response.credential != null) {
         //usa esse tipo para pegar as informações principais necessarias
-        const userData = decodeCredential(response.credential) as userData 
+        const userData = decodeCredential(response.credential) as userData
 
         // joga para tela de dashboard as informações do usuario pela barra de navegação
-        router.push({ name: 'dashboard', query: { 
-            nome: userData.given_name, 
-            token: response.credential, 
-            picture: userData.picture } })
+        router.push({
+            name: 'dashboard',
+            query: {
+                nome: userData.given_name,
+                token: response.credential,
+            }
+
+        })
     }
 }
 
@@ -101,7 +107,9 @@ const validacao = (response: any) => {
                             <h5>criar conta</h5>
                         </router-link>
                     </div>
-                    <GoogleLogin :callback="validacao" class="w-full m1"></GoogleLogin>
+                    <GoogleLogin :callback="validacao"></GoogleLogin>
+                    
+
                 </div>
 
             </div>
@@ -110,4 +118,3 @@ const validacao = (response: any) => {
 
     </div>
 </template>
-

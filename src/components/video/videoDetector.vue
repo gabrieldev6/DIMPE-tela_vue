@@ -39,17 +39,12 @@ let dateBoundingBoxes = ref<Array<any>>([])
 
 const input = useLocalStorage('input', '')
 // envia os dados coletados pela ia
-watch(click, (click: any) => {
+watch(click, async (click: any) => {
 
 
   if (click == true) {
     descricao.value = "Parar"
-
-  } else if (click == false) {
-    descricao.value = "Iniciar"
-
-
-    api.post("/listFrame", {
+    await api.post("/listFrame", {
       tempo: new Date()
     }).then((response: any) => {
 
@@ -58,6 +53,11 @@ watch(click, (click: any) => {
       }
 
     })
+  } else if (click == false) {
+    descricao.value = "Iniciar"
+
+
+    
     // limpando variavel
     listBoundingBox.value.splice(0)
 
@@ -89,7 +89,7 @@ const LISTENERS: Record<string, Function> = {
   }
 }
 
-watch(dateBoundingBoxes, (dateBoundingBoxes) => {
+watch(dateBoundingBoxes, async (dateBoundingBoxes) => {
   if (dateBoundingBoxes.length != 0 && click.value == true) {
     let dataNow = `frame_${Date.now()}`
 
@@ -106,7 +106,7 @@ watch(dateBoundingBoxes, (dateBoundingBoxes) => {
 
     const dataURL = canvas2.value.toDataURL('image/png')
 
-    fetch(dataURL).then(res => res.blob()).then(blob => {
+    await fetch(dataURL).then(res => res.blob()).then(blob => {
 
       const arquivo = new File([blob], `${dataNow}`, { type: 'image/png', })
       listFrame.value = arquivo
@@ -149,7 +149,9 @@ worker.addEventListener('message', (e: any) => {
     LISTENERS[event](e, ...args)
   }
 })
-
+let modelName = 'yolov7'
+console.log(`${window.location.origin}/${modelName}_web_model/model.json`)
+console.log('/yolov7_web_model/model.json')
 worker.postMessage(['load', '/yolov7_web_model/model.json'])
 
 const video = document.createElement('video')

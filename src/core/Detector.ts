@@ -4,7 +4,7 @@ import { non_max_suppression } from './nonMaxSuppression'
 import labels from '../assets/labels.json'
 
 /** LIMIAR de acerto */
-const THRESHOLD = 0.8
+const THRESHOLD = 0.3
 
 /**
  * Representa um objeto detectado

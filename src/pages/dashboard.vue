@@ -19,7 +19,7 @@ library.add(fas);
 
 let saudacoes = ref('')
 let hours = new Date()
-
+// let props = defineProps([token])
 
 watchEffect(() => {
 
@@ -57,7 +57,7 @@ const logout = () => {
 
         <li>
           <router-link
-            :to="{ name: 'video', query: { nome: $route.query.nome, token: $route.query.token, picture: $route.query.picture } }"
+            :to="{ name: 'video', query: { nome: $route.query.nome, token: $route.query.token} }"
             class="no-underline ">
             <button type="submit"
               class=" bg-white shadow hover:shadow-md w-full flex text-4 flex items-center text-center my-1 p-2 rounded-2 text-gray-500 border-solid border-l-4 border-l-blue-500">
@@ -70,7 +70,7 @@ const logout = () => {
         </li>
         <li>
           <router-link
-            :to="{ name: 'analitico', query: { nome: $route.query.nome, token: $route.query.token, picture: $route.query.picture } }"
+            :to="{ name: 'analitico', query: { nome: $route.query.nome, token: $route.query.token } }"
             class="no-underline">
             <button type="submit"
               class=" bg-white shadow hover:shadow-md w-full flex text-4  flex items-center text-center my-1 p-2 rounded-2  text-gray-500 border-solid border-l-4 border-l-blue-500">
@@ -108,11 +108,11 @@ const logout = () => {
       <!-- barra superior -->
       <div class="flex bg-white h-8% drop-shadow-md justify-between items-center px-4">
 
-        <h2>{{ saudacoes }} {{ $route.query.nome }}</h2>
+        <h2 class="color-gray-600">{{ saudacoes }} {{ $route.query.nome }}</h2>
         <div class="flex justify-center items-center">
           <font-awesome-icon icon="fa-solid fa-gear" class="color-gray h-25px w-25px mx-20px" />
           
-            <router-link :to="{ name: 'perfil', query: { nome: $route.query.nome, picture: $route.query.picture, token: $route.query.token}}" :props="{nome: $route.query.nome}">
+            <router-link :to="{ name: 'perfil', query: { nome: $route.query.nome, token: $route.query.token}}" :props="{nome: $route.query.nome}">
               <div class=" rounded-full shadow-md w-40px h-40px flex justify-center items-center">
                 <font-awesome-icon  icon="fa-solid fa-user"
                   class="color-gray h-20px w-20px m-1" />
@@ -148,6 +148,7 @@ const logout = () => {
 
   <div v-else class="w-full h-full flex items-center justify-center">
     esteja logado para acessar esta pagina
+    
   </div>
 </template>
 

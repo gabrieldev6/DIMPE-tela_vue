@@ -26,6 +26,7 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: () => import('./pages/dashboard.vue'),
+      props: true,
       children: [
         {
           path: '/analitico',

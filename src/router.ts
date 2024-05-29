@@ -43,8 +43,14 @@ const router = createRouter({
         {
           path: '/relatorio',
           name: 'relatorio',
-          component: () => import('./components/relatorio/relatorio.vue')
+          component: () => import('./components/report/relatorio.vue')
+        },
+        {
+          path: '/rota',
+          name: 'rota',
+          component: () => import('./pages/rota.vue')
         }
+        
       ]
 
     },

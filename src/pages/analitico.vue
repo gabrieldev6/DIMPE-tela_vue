@@ -29,7 +29,7 @@ onMounted(async ()=> {
             <Card v-for="list in listsFrames" :key="list.id_list" :data="list.data" :capa="list.capa" :id="list.id_list"></Card>
             <div v-if="listsFrames!" class="color-gray-600">
             <h2>Ainda está vazio :/</h2>
-            gere algum relatorio para que ele possa aparecer aqui...
+            Crie algum relatorio para que ele possa aparecer aqui...
             </div>
        
 

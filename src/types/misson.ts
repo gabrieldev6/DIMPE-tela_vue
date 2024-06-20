@@ -1,6 +1,6 @@
-export class MissonItem {
+export class MissionItem {
     no: number
-    action: keyof typeof Action
+    action: keyof typeof Action | string
     lat: number
     lon: number
     alt: number
@@ -10,7 +10,7 @@ export class MissonItem {
     flag: number
     
     constructor(no: number, 
-        action: keyof typeof Action, 
+        action: keyof typeof Action | string, 
         lat: number, 
         lon: number, 
         alt: number, 

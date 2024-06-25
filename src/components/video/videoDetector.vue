@@ -306,7 +306,7 @@ watch(input, async (input: any) => {
   <div class="ml-4 mt-4">
 
 <!-- min-w-900px min-h-450px -->
-    <div class="items-center bg-white p4 rounded-2 w-750px h-600px "> 
+    <div class="items-center bg-white p4 rounded-2 w-650px h-540px "> 
       <div class="flex w-full my-5px justify-between text-center items-center">
         <h3>Transmissão de imagem</h3>
         <select v-model="input" class="px-4 py-2 rounded-lg">

@@ -10,17 +10,24 @@ import { ref, onUnmounted, onMounted, watchEffect } from "vue";
 import Slide from '../components/slideBinary/slideBinary.vue'
 import { MissionItem } from '../types/misson.ts'
 import { Polyline } from '../types/polyline.ts'
+
+let mapRef = ref()
+// armazena os pontos do mapa
 let markers = ref<Array<any>>([])
-
-
+// armazena os dados dos pontos para criar arquivo
 let listpoint = ref<Array<MissionItem>>([])
-// let polylines = ref<Array<L.Polyline>>([])
+
+// armazena as linhas do mapa
+let polylines = ref<Array<any>>([])
+let polylineRef = ref<Array<any>>([])
+
+
 let listTypeWP = ref<Array<string>>(['WAYPOINT', 'PH_TIME', 'POI', 'LAND'])
 let fileContent = ref<string | ArrayBuffer | null | undefined>('')
 
+// inputs
 let nameFile = ref<string>('')
 let index = ref<number>(0)
-let indexPoint = ref<number>(0)
 let typeInput = ref<string>('WAYPOINT')
 let latInput = ref<number>()
 let lonInput = ref<number>()
@@ -35,9 +42,13 @@ let speedInput = ref<number>()
 onMounted(() => {
     // o mapa vai iniciar com o centro e zoom nesses valores
     let map = L.map('map').setView([-7.123134, -41.688980], 4)
+    mapRef.value = map
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map)
+
+    
 
     map.on('click', (e) => {
 
@@ -47,8 +58,10 @@ onMounted(() => {
 
         latInput.value = lat
         lonInput.value = lng
+        polylines.value.push([lat, lng])
 
         let markador = L.marker([lat, lng]).addTo(map).bindPopup('ponto: ' + index.value).openPopup()
+        
         markers.value.push(markador)
         markador.on('click', (e) => {
 
@@ -56,12 +69,11 @@ onMounted(() => {
 
             latInput.value = lat
             lonInput.value = lng
-            // auxpolylines.value.push([lat, lng])
-            
+
             listpoint.value.map((point) => {
                 if (point.lat == latInput.value, point.lon == lonInput.value) {
 
-                    indexPoint.value = point.no
+                    index.value = point.no
                     typeInput.value = point.action
                     heightInput.value = point.alt
                     point.parameter1 = speedInput.value || 1
@@ -70,15 +82,18 @@ onMounted(() => {
                 }
             })
         })
+
+        let linhas = L.polyline([polylines.value]).addTo(map)
+        polylineRef.value.push(linhas)
         // quando adiciona um novo point
         console.log(index.value)
         let point = new MissionItem(index.value, typeInput.value, latInput.value, lonInput.value, heightInput.value || 1, 136, 0, 0, 0)
         heightInput.value = point.alt
         speedInput.value = point.parameter1
-        indexPoint.value = point.no
+        index.value = point.no
         listpoint.value.push(point)
 
-        // mede a distancia de todos os pontos
+        // calcula a distancia de todos os pontos
         if (listpoint.value.length > 1) {
             console.log(listpoint.value.length)
             for (let i = listpoint.value.length - 2; i < listpoint.value.length - 1; i++) {
@@ -97,25 +112,59 @@ onMounted(() => {
 
 })
 
+const deletePoint = () => {
+    markers.value.forEach((marker, indexMarker) => {
+        
+        if(index.value-1 == indexMarker) {
+            marker.remove()
+            listpoint.value.splice(index.value-1, 1)
 
+        }
+    })
 
-const deleteAllPoints = () => {
+    polylineRef.value.forEach((polyline, indexLine) => {
+        
+        if(index.value-1 == indexLine) {
+            polyline.remove()
+            polylineRef.value.splice(index.value-1, 1)
+        }
+    })
+
+    // polylines.value = []
+    // polylineRef.value = []
+}
+
+const deleteAllPoints = () => { 
+    
     listpoint.value = []
+    polylines.value = []
+    
+    // inputs
     distance.value = 0
-    indexPoint.value = 0
-    typeInput.value = ''
+    index.value = 0
     lonInput.value = 0
     latInput.value = 0
     heightInput.value = 0
     speedInput.value = 0
-    // vai remover os marcadores do 
-    markers.value.forEach(marker => {
+    
+    // arquivo
+    nameFile.value = ''
+    fileContent.value = ''
+
+    // vai remover os marcadores do mapa
+    markers.value.forEach((marker) => {
         marker.remove()
     })
     
+    // vai remove as linhas que ligam os marcadores
+    polylineRef.value.forEach((polyline) => {
+        polyline.remove()
+    })
+
     
     
 }
+
 
 
 
@@ -132,7 +181,7 @@ watchEffect(() => {
     listpoint.value.map((point) => {
         if (point.lat == latInput.value, point.lon == lonInput.value) {
 
-            indexPoint.value = point.no
+            index.value = point.no
             point.action = typeInput.value
             point.alt = heightInput.value || 1
             point.parameter1 = speedInput.value || 10
@@ -144,16 +193,18 @@ watchEffect(() => {
 
 })
 
+
 // destruindo os valores
 onUnmounted(() => {
-
-    deleteAllPoints()
-
+    
 })
 
 
 // lendo o arquivo upado
 let pegarValor = async (event: any) => {
+
+    deleteAllPoints()
+
     let valor = event.target.files[0]
     nameFile.value = valor.name
     const reader = new FileReader()
@@ -162,12 +213,19 @@ let pegarValor = async (event: any) => {
 
         fileContent.value = e.target?.result
 
-        // if (typeof fileContent.value === 'string') {
-        //     const { missionItems, polyline } = parseMissonItems(fileContent.value)
-        //     listMark.value = missionItems
-        //     polylines.value = polyline
+        if (typeof fileContent.value === 'string') {
+            const { missionItems, polyline } = parseMissonItems(fileContent.value)
 
-        // }
+            console.log(missionItems, polyline)
+            listpoint.value = missionItems
+            // polylines.value = polyline
+            missionItems.forEach((item) => {
+                // console.log("passou aqui primeiro")
+                markers.value.push(L.marker([item.lat, item.lon]))
+            })
+
+
+        }
 
     }
     reader.onerror = (e) => {
@@ -260,8 +318,9 @@ let parseMissonItems = (xmlString: string) => {
 let toRadians = (degress: number) => {
     return degress * (Math.PI / 180)
 }
-
+// calcula a distancia em metros da rota 
 let distanceCalculation = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+
     let R = 6371000 //raio da terra em metros
 
     const dLat = toRadians(lat2 - lat1);
@@ -278,7 +337,7 @@ let distanceCalculation = (lat1: number, lon1: number, lat2: number, lon2: numbe
     return distance
 
 }
-// vai legar o estado do slide
+// vai pegar o estado do slide
 let handleStateChanged = (newState: boolean) => {
 
     refMar.value = newState
@@ -300,24 +359,25 @@ let handleStateChanged = (newState: boolean) => {
 
                 <li class="mr-2">
 
-                    <div class="w-full flex mb-5px  text-white bg-blue hover:bg-blue-500 rounded-1 ">
+                    <div class="w-full flex mb-5px  text-white bg-blue-500 hover:bg-blue-600 rounded-1 ">
                         <label for="inputFoto"
                             class="shadow flex font-bold justify-center items-center w-full p-2 text-sm">
                             <font-awesome-icon class="pr-5px" icon="fa-solid fa-file-arrow-up" />
-                            <h4>Subir arquivo</h4>
+                            <h4 class="flex justify-center items-center">Carregar arquivo</h4>
                         </label>
+
                         <input @change="pegarValor" name="image" id="inputFoto" type="file" class="hidden">
                     </div>
 
                 </li>
 
                 <li class="mr-2"> <button
-                        class=" text-sm shadow w-100% flex items-center font-120px p-2 mb-5px hover:bg-blue-500 text-white bg-blue rounded-1">
+                        class=" text-sm shadow w-full flex items-center font-120px p-2 mb-5px  bg-blue-500 hover:bg-blue-600 text-white  rounded-1">
                         <font-awesome-icon class="pr-5px" icon="fa-solid fa-file-arrow-down" />
                         <h4>Baixar arquivo</h4>
                     </button> </li>
                 <li class="mr-2"> <button @click="deleteAllPoints"
-                        class="shadow w-100% flex items-center text-sm p-2 mb-5px  hover:bg-red-500 text-white bg-red rounded-1"><font-awesome-icon
+                        class="shadow w-full flex items-center text-sm p-2 mb-5px bg-red-500 hover:bg-red-600 text-white  rounded-1"><font-awesome-icon
                             class="pr-5px" icon="fa-solid fa-trash" />
                         <h4>Deletar pontos</h4>
                     </button> </li>
@@ -332,7 +392,7 @@ let handleStateChanged = (newState: boolean) => {
             </ul>
             <ul class="list-none px-15px">
                 <li>
-                    <h4>Editar ponto {{ indexPoint }}</h4>
+                    <h4>Editar ponto: {{ index }}</h4>
                 </li>
                 <!-- tipo -->
                 <li class="flex items-center mb-10px">
@@ -383,7 +443,7 @@ let handleStateChanged = (newState: boolean) => {
 
                 </li>
                 <li class="flex items-center mb-10px">
-                    <button
+                    <button @click="deletePoint"
                         class="shadow w-100% flex items-center p-2 mb-5px hover:bg-red-500 text-white bg-red rounded-1">
                         <font-awesome-icon class="pr-5px" icon="fa-solid fa-trash" />
                         <h4>Deletar ponto</h4>

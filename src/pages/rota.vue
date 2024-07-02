@@ -11,15 +11,35 @@ import Slide from '../components/slideBinary/slideBinary.vue'
 import { MissionItem } from '../types/misson.ts'
 import { Polyline } from '../types/polyline.ts'
 
-let mapRef = ref()
+import iconBlue from '../assets/marker-icon-blue.svg'
+import iconRed from '../assets/marker-icon-red.svg'
+// let mapRef = ref()
+let mapContainer = ref()
 // armazena os pontos do mapa
-let markers = ref<Array<any>>([])
+let layerGroup = L.layerGroup()
+let layerGroupLines = L.layerGroup()
+
+let defaultIcon = new L.Icon({
+    iconUrl: iconBlue,
+  iconSize: [40, 40],
+  iconAnchor: [20, 33],
+  popupAnchor: [1, -34],
+  //   shadowSize: [41, 41]
+});
+
+let clickedIcon = new L.Icon({
+  iconUrl: iconRed,
+  iconSize: [40, 40],
+  iconAnchor: [20, 33],
+  popupAnchor: [1, -34],
+//   shadowSize: [41, 41]
+});
 // armazena os dados dos pontos para criar arquivo
 let listpoint = ref<Array<MissionItem>>([])
-
+let listMarker = ref<Array<any>>([])
 // armazena as linhas do mapa
 let polylines = ref<Array<any>>([])
-let polylineRef = ref<Array<any>>([])
+let polylineRef = ref<any>()
 
 
 let listTypeWP = ref<Array<string>>(['WAYPOINT', 'PH_TIME', 'POI', 'LAND'])
@@ -28,6 +48,7 @@ let fileContent = ref<string | ArrayBuffer | null | undefined>('')
 // inputs
 let nameFile = ref<string>('')
 let index = ref<number>(0)
+let indexPoint = ref<number>(0)
 let typeInput = ref<string>('WAYPOINT')
 let latInput = ref<number>()
 let lonInput = ref<number>()
@@ -41,141 +62,157 @@ let speedInput = ref<number>()
 
 onMounted(() => {
     // o mapa vai iniciar com o centro e zoom nesses valores
-    let map = L.map('map').setView([-7.123134, -41.688980], 4)
-    mapRef.value = map
+    let map = L.map(mapContainer.value).setView([-7.123134, -41.688980], 4)
+
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
+        
     }).addTo(map)
 
-    
+    layerGroup.addTo(map)
+    layerGroupLines.addTo(map)
 
-    map.on('click', (e) => {
-
-        const { lat, lng } = e.latlng
-
-        index.value = index.value + 1
-
-        latInput.value = lat
-        lonInput.value = lng
-        polylines.value.push([lat, lng])
-
-        let markador = L.marker([lat, lng]).addTo(map).bindPopup('ponto: ' + index.value).openPopup()
-        
-        markers.value.push(markador)
-        markador.on('click', (e) => {
-
-            const { lat, lng } = e.latlng
-
-            latInput.value = lat
-            lonInput.value = lng
-
-            listpoint.value.map((point) => {
-                if (point.lat == latInput.value, point.lon == lonInput.value) {
-
-                    index.value = point.no
-                    typeInput.value = point.action
-                    heightInput.value = point.alt
-                    point.parameter1 = speedInput.value || 1
-                    console.log(listpoint.value)
-
-                }
-            })
-        })
-
-        let linhas = L.polyline([polylines.value]).addTo(map)
-        polylineRef.value.push(linhas)
-        // quando adiciona um novo point
-        console.log(index.value)
-        let point = new MissionItem(index.value, typeInput.value, latInput.value, lonInput.value, heightInput.value || 1, 136, 0, 0, 0)
-        heightInput.value = point.alt
-        speedInput.value = point.parameter1
-        index.value = point.no
-        listpoint.value.push(point)
-
-        // calcula a distancia de todos os pontos
-        if (listpoint.value.length > 1) {
-            console.log(listpoint.value.length)
-            for (let i = listpoint.value.length - 2; i < listpoint.value.length - 1; i++) {
-
-                distance.value = distance.value + distanceCalculation(listpoint.value[i].lat, listpoint.value[i].lon, listpoint.value[i + 1].lat, listpoint.value[i + 1].lon)
-                console.log(distance.value)
-            }
-
-        }
-
-
-    })
-
-
-
+    map.on('click', addMarker)
 
 })
 
-const deletePoint = () => {
-    markers.value.forEach((marker, indexMarker) => {
-        
-        if(index.value-1 == indexMarker) {
-            marker.remove()
-            listpoint.value.splice(index.value-1, 1)
+const addMarker = (e: L.LeafletMouseEvent) => {
+    const { lat, lng } = e.latlng
+    index.value = index.value + 1
 
-        }
+    let point = new MissionItem(index.value, typeInput.value, lat, lng, heightInput.value || 1, speedInput.value || 1, refMar.value ? 1 : 0, 0, 0)
+    listpoint.value.push(point)
+
+    const marker = L.marker(e.latlng, {icon: defaultIcon})
+    // trocar a cor quando clica
+    
+
+    listMarker.value.push(marker)
+    polylines.value.push(e.latlng)
+
+    marker.addTo(layerGroup)
+    const polyline = L.polyline([polylines.value]).addTo(layerGroupLines)
+
+    polylineRef.value = polyline
+
+
+    marker.on('click', (e: L.LeafletMouseEvent) => {
+        // console.log(e)
+        const { lat, lng } = e.latlng
+        
+        setAllMarkersToDefault()
+        const currentIcon = marker.getIcon()
+        marker.setIcon(currentIcon === defaultIcon ? clickedIcon : defaultIcon)
+
+        // atualiza os inputs 
+        listpoint.value.forEach((point) => {
+            if (point.lat == lat, point.lon == lng) {
+
+                indexPoint.value = point.no
+                typeInput.value = point.action
+                latInput.value = point.lat
+                lonInput.value = point.lon
+                heightInput.value = point.alt
+                speedInput.value = point.parameter1
+                point.parameter1 = speedInput.value || 1
+                point.parameter2 = refMar.value ? 1 : 0
+
+            }
+        })
+
     })
 
-    polylineRef.value.forEach((polyline, indexLine) => {
-        
-        if(index.value-1 == indexLine) {
-            polyline.remove()
-            polylineRef.value.splice(index.value-1, 1)
-        }
-    })
 
-    // polylines.value = []
-    // polylineRef.value = []
+    // calcula a distancia de todos os pontos
+    updateDistance()
 }
 
-const deleteAllPoints = () => { 
-    
+const setAllMarkersToDefault = () => {
+  listMarker.value.forEach(marker => {
+    marker.setIcon(defaultIcon);
+  });
+};
+
+const deleteAllPoints = () => {
+
     listpoint.value = []
     polylines.value = []
     
+    listMarker.value = []
+
     // inputs
     distance.value = 0
     index.value = 0
+    indexPoint.value = 0
     lonInput.value = 0
     latInput.value = 0
     heightInput.value = 0
     speedInput.value = 0
-    
+
     // arquivo
     nameFile.value = ''
     fileContent.value = ''
 
-    // vai remover os marcadores do mapa
-    markers.value.forEach((marker) => {
-        marker.remove()
-    })
-    
-    // vai remove as linhas que ligam os marcadores
-    polylineRef.value.forEach((polyline) => {
-        polyline.remove()
-    })
-
-    
-    
+    layerGroup.clearLayers()
+    layerGroupLines.clearLayers()
 }
 
+const deletePoint = () => {
+    console.log(listpoint.value.length)
+    if (listpoint.value.length > 1) {
+        listpoint.value.forEach((point, index) => {
+            console.log(point)
+            if (indexPoint.value - 1 == index) {
 
 
+                console.log(`point escolhido 1: ${indexPoint.value - 1}`)
+                console.log(`point escolhido 2: ${index}`)
+
+                // remove dado do array
+                listpoint.value.splice(indexPoint.value - 1, 1)
+
+                // reorganiza os indices do array de dados
+                for (let i = indexPoint.value - 1; i < listpoint.value.length; i++) {
+                    listpoint.value[i].no = listpoint.value[i].no - 1
+
+                }
+                
+                // remove do array a linha do mapa que liga dois vertices
+                layerGroupLines.clearLayers()
+                polylines.value.splice(indexPoint.value - 1 , 1)
+
+                
+                polylineRef.value.setLatLngs(polylines.value)
+                console.log(polylines.value)
+                 
+                // remove o ponto mapa
+                const marker = listMarker.value.splice(indexPoint.value - 1, 1)
+
+                // reorganizar os pontos do 
+                listMarker.value.forEach((marker) => {
+                    console.log(marker)
+                })
+                layerGroup.removeLayer(marker[0])
+
+            }
+            
+        })
+        
+
+    } else if (listpoint.value.length <= 1) {
+
+        deleteAllPoints()
+    }
 
 
+    index.value = listpoint.value.length
+    // atualiza os valores de distancia apos apagar algum ponto
+    distance.value = 0
+    updateDistance()
+}
 
 watchEffect(() => {
-    // if(listMark.value != undefined && latInput.value && lonInput.value) {
-    //     listMark.value[listMark.value.length-1].setLatLng([latInput.value, lonInput.value])
-    //     auxpolylines.value[listMark.value.length-1].lat = latInput.value
-    //     auxpolylines.value[listMark.value.length-1].lng = lonInput.value
-    // }
 
     // quando houver algum alteracao nos valores
     listpoint.value.map((point) => {
@@ -185,7 +222,7 @@ watchEffect(() => {
             point.action = typeInput.value
             point.alt = heightInput.value || 1
             point.parameter1 = speedInput.value || 10
-            console.log(listpoint.value)
+            point.parameter2 = refMar.value ? 1 : 0
 
         }
 
@@ -193,15 +230,13 @@ watchEffect(() => {
 
 })
 
-
 // destruindo os valores
 onUnmounted(() => {
-    
+    deleteAllPoints()
 })
 
-
 // lendo o arquivo upado
-let pegarValor = async (event: any) => {
+const getValueFile = async (event: any) => {
 
     deleteAllPoints()
 
@@ -220,8 +255,9 @@ let pegarValor = async (event: any) => {
             listpoint.value = missionItems
             // polylines.value = polyline
             missionItems.forEach((item) => {
+                console.log(item)
                 // console.log("passou aqui primeiro")
-                markers.value.push(L.marker([item.lat, item.lon]))
+                // markers.value.push(L.marker([item.lat, item.lon]))
             })
 
 
@@ -237,7 +273,7 @@ let pegarValor = async (event: any) => {
 }
 
 // traduzindo arquivo string para xml e depois para objeto
-let parseMissonItems = (xmlString: string) => {
+const parseMissonItems = (xmlString: string) => {
     const parser = new DOMParser()
     const xmlDoc = parser.parseFromString(xmlString, "application/xml")
 
@@ -315,6 +351,19 @@ let parseMissonItems = (xmlString: string) => {
     return { missionItems, polyline }
 }
 
+const updateDistance = () => {
+    // calcula a distancia de todos os pontos
+    if (listpoint.value.length > 1) {
+        // vai pegar o antipenultimo e o ultimo ponto, calcular a distancia e soma ao que ja foi calculado 
+        for (let i = listpoint.value.length - 2; i < listpoint.value.length - 1; i++) {
+
+            distance.value = distance.value + distanceCalculation(listpoint.value[i].lat, listpoint.value[i].lon, listpoint.value[i + 1].lat, listpoint.value[i + 1].lon)
+
+        }
+
+    }
+}
+
 let toRadians = (degress: number) => {
     return degress * (Math.PI / 180)
 }
@@ -353,7 +402,7 @@ let handleStateChanged = (newState: boolean) => {
         <!-- menu lateral -->
         <div class="bg-white rounded-xl min-w-380px max-w-380px h-90% m-4 ">
             <div class=" pt-15px pl-15px w-full">
-                <h4 class="mb-5px">Menu de ações</h4>
+                <h4 class="mb-5px font-bold text-5">Menu de ações</h4>
             </div>
             <ul class="list-none px-15px flex justify-around">
 
@@ -366,7 +415,7 @@ let handleStateChanged = (newState: boolean) => {
                             <h4 class="flex justify-center items-center">Carregar arquivo</h4>
                         </label>
 
-                        <input @change="pegarValor" name="image" id="inputFoto" type="file" class="hidden">
+                        <input @change="getValueFile" name="image" id="inputFoto" type="file" class="hidden">
                     </div>
 
                 </li>
@@ -392,7 +441,7 @@ let handleStateChanged = (newState: boolean) => {
             </ul>
             <ul class="list-none px-15px">
                 <li>
-                    <h4>Editar ponto: {{ index }}</h4>
+                    <h4 class="flex">Editar ponto: {{ indexPoint }}</h4>
                 </li>
                 <!-- tipo -->
                 <li class="flex items-center mb-10px">
@@ -453,7 +502,7 @@ let handleStateChanged = (newState: boolean) => {
 
         </div>
         <!-- mapa -->
-        <div id="map" class="w-full h-full"></div>
+        <div id="map" ref="mapContainer" class="w-full h-full"></div>
 
     </div>
 </template>

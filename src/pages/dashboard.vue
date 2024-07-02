@@ -82,7 +82,7 @@ const logout = () => {
               class="no-underline">
               <button type="submit"
                 class=" bg-white shadow hover:shadow-md w-full text-4  flex items-center text-center my-1 p-2 rounded-2  text-gray-500 border-solid border-l-4 border-l-blue-500">
-                <font-awesome-icon icon="fa-solid fa-chart-line" class="mx-2 " />
+                <font-awesome-icon icon="fa-solid fa-location-dot" class="mx-2 " />
                 Gerador de rota
               </button>
             </router-link>

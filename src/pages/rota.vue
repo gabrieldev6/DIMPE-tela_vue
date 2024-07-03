@@ -1,45 +1,54 @@
 <script setup lang="ts">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-// import { LMap, LTileLayer, LMarker, LPolyline, LPopup } from "@vue-leaflet/vue-leaflet";
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
 import { ref, onUnmounted, onMounted, watchEffect } from "vue";
 
 import Slide from '../components/slideBinary/slideBinary.vue'
+
+// componentes
 import { MissionItem } from '../types/misson.ts'
 import { Polyline } from '../types/polyline.ts'
 
+// icones de marcadores
 import iconBlue from '../assets/marker-icon-blue.svg'
 import iconRed from '../assets/marker-icon-red.svg'
-// let mapRef = ref()
+
 let mapContainer = ref()
-// armazena os pontos do mapa
+let map: L.Map
+// camadas independentes que armazenam os marcadores e as linhas
 let layerGroup = L.layerGroup()
 let layerGroupLines = L.layerGroup()
 
 let defaultIcon = new L.Icon({
     iconUrl: iconBlue,
-  iconSize: [40, 40],
-  iconAnchor: [20, 33],
-  popupAnchor: [1, -34],
-  //   shadowSize: [41, 41]
+    iconSize: [40, 40],
+    iconAnchor: [20, 33],
+    popupAnchor: [1, -34],
+    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+    shadowSize: [41, 41],
+    shadowAnchor: [12, 41]
 });
 
 let clickedIcon = new L.Icon({
-  iconUrl: iconRed,
-  iconSize: [40, 40],
-  iconAnchor: [20, 33],
-  popupAnchor: [1, -34],
-//   shadowSize: [41, 41]
+    iconUrl: iconRed,
+    iconSize: [40, 40],
+    iconAnchor: [20, 33],
+    popupAnchor: [1, -34],
+    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+    shadowSize: [41, 41],
+    shadowAnchor: [12, 41]
 });
+
 // armazena os dados dos pontos para criar arquivo
-let listpoint = ref<Array<MissionItem>>([])
-let listMarker = ref<Array<any>>([])
+let listpoint = ref<Array<MissionItem>>([]) //meta dados
+let listMarker = ref<Array<any>>([]) //marcadores visuais
+
 // armazena as linhas do mapa
-let polylines = ref<Array<any>>([])
-let polylineRef = ref<any>()
+let polylines = ref<Array<any>>([]) //metadados
+let polylineRef = ref<any>() //referencia da linhas visuais
 
 
 let listTypeWP = ref<Array<string>>(['WAYPOINT', 'PH_TIME', 'POI', 'LAND'])
@@ -59,48 +68,54 @@ let centerX = ref<number>(-7.123134)
 let centerY = ref<number>(-41.688980)
 let zoom = ref<number>(4)
 let speedInput = ref<number>()
+let waitTimeInput = ref<number>(0)
+let isPHTIMEactive = ref<boolean>(false)
 
 onMounted(() => {
     // o mapa vai iniciar com o centro e zoom nesses valores
-    let map = L.map(mapContainer.value).setView([-7.123134, -41.688980], 4)
+    map = L.map(mapContainer.value).setView([centerX.value, centerY.value], zoom.value)
 
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
-        
     }).addTo(map)
 
     layerGroup.addTo(map)
     layerGroupLines.addTo(map)
 
     map.on('click', addMarker)
-
 })
 
 const addMarker = (e: L.LeafletMouseEvent) => {
     const { lat, lng } = e.latlng
     index.value = index.value + 1
 
-    let point = new MissionItem(index.value, typeInput.value, lat, lng, heightInput.value || 1, speedInput.value || 1, refMar.value ? 1 : 0, 0, 0)
+
+    let point = new MissionItem(index.value, typeInput.value, lat, lng, heightInput.value || 1, speedInput.value || 1, refMar.value ? 1 : 0, waitTimeInput.value, 0)
     listpoint.value.push(point)
 
-    const marker = L.marker(e.latlng, {icon: defaultIcon})
-    // trocar a cor quando clica
-    
+
+
+    const marker = L.marker(e.latlng, { icon: defaultIcon })
+
+
 
     listMarker.value.push(marker)
     polylines.value.push(e.latlng)
 
     marker.addTo(layerGroup)
-    const polyline = L.polyline([polylines.value]).addTo(layerGroupLines)
 
+    const polyline = L.polyline([polylines.value]).addTo(layerGroupLines)
     polylineRef.value = polyline
 
 
+
     marker.on('click', (e: L.LeafletMouseEvent) => {
-        // console.log(e)
+
         const { lat, lng } = e.latlng
-        
+
+
+        // troca a cor quando clica
         setAllMarkersToDefault()
         const currentIcon = marker.getIcon()
         marker.setIcon(currentIcon === defaultIcon ? clickedIcon : defaultIcon)
@@ -116,8 +131,8 @@ const addMarker = (e: L.LeafletMouseEvent) => {
                 heightInput.value = point.alt
                 speedInput.value = point.parameter1
                 point.parameter1 = speedInput.value || 1
-                point.parameter2 = refMar.value ? 1 : 0
-
+                refMar.value = point.parameter2 ? true : false
+                waitTimeInput.value = point.parameter3
             }
         })
 
@@ -128,17 +143,19 @@ const addMarker = (e: L.LeafletMouseEvent) => {
     updateDistance()
 }
 
+// vai atualizar a cor do marcador quando clicar no marcador
 const setAllMarkersToDefault = () => {
-  listMarker.value.forEach(marker => {
-    marker.setIcon(defaultIcon);
-  });
+    listMarker.value.forEach(marker => {
+        marker.setIcon(defaultIcon);
+    });
 };
 
+// deletar todos os estados
 const deleteAllPoints = () => {
 
     listpoint.value = []
     polylines.value = []
-    
+
     listMarker.value = []
 
     // inputs
@@ -148,6 +165,7 @@ const deleteAllPoints = () => {
     lonInput.value = 0
     latInput.value = 0
     heightInput.value = 0
+    refMar.value = false
     speedInput.value = 0
 
     // arquivo
@@ -158,6 +176,7 @@ const deleteAllPoints = () => {
     layerGroupLines.clearLayers()
 }
 
+// delete um ponto especifico
 const deletePoint = () => {
     console.log(listpoint.value.length)
     if (listpoint.value.length > 1) {
@@ -177,15 +196,15 @@ const deletePoint = () => {
                     listpoint.value[i].no = listpoint.value[i].no - 1
 
                 }
-                
+
                 // remove do array a linha do mapa que liga dois vertices
                 layerGroupLines.clearLayers()
-                polylines.value.splice(indexPoint.value - 1 , 1)
+                polylines.value.splice(indexPoint.value - 1, 1)
 
-                
+
                 polylineRef.value.setLatLngs(polylines.value)
-                console.log(polylines.value)
-                 
+                polylineRef.value.addTo(layerGroupLines)
+
                 // remove o ponto mapa
                 const marker = listMarker.value.splice(indexPoint.value - 1, 1)
 
@@ -196,9 +215,9 @@ const deletePoint = () => {
                 layerGroup.removeLayer(marker[0])
 
             }
-            
+
         })
-        
+
 
     } else if (listpoint.value.length <= 1) {
 
@@ -206,7 +225,7 @@ const deletePoint = () => {
     }
 
 
-    index.value = listpoint.value.length
+    // index.value = listpoint.value.length
     // atualiza os valores de distancia apos apagar algum ponto
     distance.value = 0
     updateDistance()
@@ -224,6 +243,13 @@ watchEffect(() => {
             point.parameter1 = speedInput.value || 10
             point.parameter2 = refMar.value ? 1 : 0
 
+            if (typeInput.value == 'PH_TIME') {
+                isPHTIMEactive.value = true
+                point.parameter3 = waitTimeInput.value
+            } else {
+                isPHTIMEactive.value = false
+                waitTimeInput.value = 0
+            }
         }
 
     })
@@ -239,7 +265,7 @@ onUnmounted(() => {
 const getValueFile = async (event: any) => {
 
     deleteAllPoints()
-
+    console.log('passou getvalue')
     let valor = event.target.files[0]
     nameFile.value = valor.name
     const reader = new FileReader()
@@ -254,13 +280,38 @@ const getValueFile = async (event: any) => {
             console.log(missionItems, polyline)
             listpoint.value = missionItems
             // polylines.value = polyline
-            missionItems.forEach((item) => {
-                console.log(item)
-                // console.log("passou aqui primeiro")
-                // markers.value.push(L.marker([item.lat, item.lon]))
+            map.setView([centerX.value, centerY.value], zoom.value)
+
+            listpoint.value.forEach((item) => {
+                const marker = L.marker([item.lat, item.lon], { icon: defaultIcon }).addTo(layerGroup)
+
+                listMarker.value.push(marker)
+                polylines.value.push([item.lat, item.lon])
+
+                marker.on('click', (e: L.LeafletMouseEvent) => {
+                    const {lat, lng} = e.latlng
+                    setAllMarkersToDefault()
+                    const currentIcon = marker.getIcon()
+                    marker.setIcon(currentIcon === defaultIcon ? clickedIcon : defaultIcon)
+                    listpoint.value.forEach((point) => {
+                        if (point.lat == lat, point.lon == lng) {
+
+                            indexPoint.value = point.no
+                            typeInput.value = point.action
+                            latInput.value = point.lat
+                            lonInput.value = point.lon
+                            heightInput.value = point.alt
+                            speedInput.value = point.parameter1
+                            point.parameter1 = speedInput.value || 1
+                            refMar.value = point.parameter2 ? true : false
+                            waitTimeInput.value = point.parameter3
+                        }
+                    })
+                })
+
+                const polyline = L.polyline([polylines.value]).addTo(layerGroupLines)
+                polylineRef.value = polyline
             })
-
-
         }
 
     }
@@ -288,13 +339,17 @@ const parseMissonItems = (xmlString: string) => {
     const missionItemElements = xmlDoc.getElementsByTagName('missionitem')
     const mwp = xmlDoc.getElementsByTagName('mwp')
 
-    // val pegar o valor de zoom do arquivo
+    // pegar o valor de zoom do arquivo
     for (let i = 0; i < mwp.length; i++) {
         const item = mwp[i]
-        let valor = item.getAttribute("zoom")
-        if (valor != null) {
-
-            zoom.value = parseInt(valor)
+        let zoomFile = item.getAttribute("zoom")
+        let centerx = item.getAttribute("cx")
+        let centery = item.getAttribute("cy")
+        if (zoomFile != null && centerx != null && centery != null) {
+            console.log(`valor: ${zoomFile}`)
+            zoom.value = parseInt(zoomFile)
+            centerX.value = parseInt(centerx)
+            centerY.value = parseInt(centery)
         }
     }
 
@@ -343,6 +398,7 @@ const parseMissonItems = (xmlString: string) => {
         refMar.value = false
     } else {
         refMar.value = true
+
     }
 
 
@@ -428,7 +484,7 @@ let handleStateChanged = (newState: boolean) => {
                 <li class="mr-2"> <button @click="deleteAllPoints"
                         class="shadow w-full flex items-center text-sm p-2 mb-5px bg-red-500 hover:bg-red-600 text-white  rounded-1"><font-awesome-icon
                             class="pr-5px" icon="fa-solid fa-trash" />
-                        <h4>Deletar pontos</h4>
+                        <h4>Deletar todos os pontos</h4>
                     </button> </li>
             </ul>
             <ul class="list-none px-15px">
@@ -491,9 +547,15 @@ let handleStateChanged = (newState: boolean) => {
                         type="number" min="1" max="1000" name="" id="">
 
                 </li>
+                <li v-if="isPHTIMEactive" class="flex items-center mb-10px">
+                    <div class="w-120px"><label for="">Tempo de espera (s):</label> </div>
+                    <input v-model="waitTimeInput" class="border-solid border-gray border-1px rounded-md h-20px px-1"
+                        type="number" min="1" max="1000" name="" id="">
+
+                </li>
                 <li class="flex items-center mb-10px">
                     <button @click="deletePoint"
-                        class="shadow w-100% flex items-center p-2 mb-5px hover:bg-red-500 text-white bg-red rounded-1">
+                        class="shadow w-100% flex items-center p-2 mb-5px hover:bg-red-600  text-white bg-red-500 rounded-1">
                         <font-awesome-icon class="pr-5px" icon="fa-solid fa-trash" />
                         <h4>Deletar ponto</h4>
                     </button>

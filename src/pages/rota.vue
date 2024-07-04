@@ -51,7 +51,7 @@ let polylines = ref<Array<any>>([]) //metadados
 let polylineRef = ref<any>() //referencia da linhas visuais
 
 
-let listTypeWP = ref<Array<string>>(['WAYPOINT', 'PH_TIME', 'POI', 'LAND'])
+let listTypeWP = ref<Array<string>>(['WAYPOINT', 'POSHOLD_TIME', 'SET_POI', 'LAND'])
 let fileContent = ref<string | ArrayBuffer | null | undefined>('')
 
 // inputs
@@ -69,7 +69,10 @@ let centerY = ref<number>(-41.688980)
 let zoom = ref<number>(4)
 let speedInput = ref<number>()
 let waitTimeInput = ref<number>(0)
+
 let isPHTIMEactive = ref<boolean>(false)
+let warningActive = ref<boolean>(false)
+
 
 onMounted(() => {
     // o mapa vai iniciar com o centro e zoom nesses valores
@@ -243,7 +246,7 @@ watchEffect(() => {
             point.parameter1 = speedInput.value || 10
             point.parameter2 = refMar.value ? 1 : 0
 
-            if (typeInput.value == 'PH_TIME') {
+            if (typeInput.value == 'POSHOLD_TIME') {
                 isPHTIMEactive.value = true
                 point.parameter3 = waitTimeInput.value
             } else {
@@ -260,9 +263,11 @@ watchEffect(() => {
 onUnmounted(() => {
     deleteAllPoints()
 })
-
+const downloadFile = () => {
+    console.log(listpoint.value)
+}
 // lendo o arquivo upado
-const getValueFile = async (event: any) => {
+const getValueFile = (event: any) => {
 
     deleteAllPoints()
     console.log('passou getvalue')
@@ -443,12 +448,19 @@ let distanceCalculation = (lat1: number, lon1: number, lat2: number, lon2: numbe
 
 }
 // vai pegar o estado do slide
-let handleStateChanged = (newState: boolean) => {
+const handleStateChanged = (newState: boolean) => {
 
     refMar.value = newState
 
 }
+const switchPopupDelete = () => {
+    warningActive.value=!warningActive.value
+}
 
+const confirmDeleteAllPoint = () => {
+    deleteAllPoints()
+    switchPopupDelete()
+}
 </script>
 
 <template>
@@ -476,12 +488,12 @@ let handleStateChanged = (newState: boolean) => {
 
                 </li>
 
-                <li class="mr-2"> <button
+                <li class="mr-2"> <button @click="downloadFile"
                         class=" text-sm shadow w-full flex items-center font-120px p-2 mb-5px  bg-blue-500 hover:bg-blue-600 text-white  rounded-1">
                         <font-awesome-icon class="pr-5px" icon="fa-solid fa-file-arrow-down" />
                         <h4>Baixar arquivo</h4>
                     </button> </li>
-                <li class="mr-2"> <button @click="deleteAllPoints"
+                <li class="mr-2"> <button @click="switchPopupDelete"
                         class="shadow w-full flex items-center text-sm p-2 mb-5px bg-red-500 hover:bg-red-600 text-white  rounded-1"><font-awesome-icon
                             class="pr-5px" icon="fa-solid fa-trash" />
                         <h4>Deletar todos os pontos</h4>
@@ -563,8 +575,31 @@ let handleStateChanged = (newState: boolean) => {
             </ul>
 
         </div>
+        
         <!-- mapa -->
         <div id="map" ref="mapContainer" class="w-full h-full"></div>
+        
+        <!-- fundo popup -->
+        <div v-if="warningActive" class="w-80% h-92% z-1000 flex absolute justify-center items-center backdrop-blur-sm" >
+            
+            <!-- popup -->
+            <div class="w-500px h-80px shadow flex justify-around items-center bg-white rounded-2 border-solid border-l-4 border-l-blue-500">
+                <h4>Quer mesmo deletar tudo?</h4>
+                <div class="flex" >
+
+                    <button @click="switchPopupDelete"
+                        class="w-100px h-40px shadow  flex items-center justify-center p-2 mx-5px text-black hover:bg-gray-100 bg-white rounded-1">
+                        <h4>Cancelar</h4>
+                    </button>
+
+                    <button  @click="confirmDeleteAllPoint"
+                        class="w-100px h-40px shadow flex items-center justify-center p-2 mx-5px text-white hover:bg-red-600 bg-red-500 rounded-1">
+                        <h4>Deletar</h4>
+                    </button>
+                </div>
+                
+            </div>
+        </div>
 
     </div>
 </template>

@@ -1,5 +1,4 @@
 import * as tf from '@tensorflow/tfjs'
-// import '@tensorflow/tfjs-backend-webgl'
 import { non_max_suppression } from './nonMaxSuppression'
 import labels from '../assets/labels.json'
 

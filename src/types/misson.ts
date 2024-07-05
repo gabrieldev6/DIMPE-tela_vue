@@ -34,8 +34,8 @@ export class MissionItem {
 
 enum Action {
     WAYPOINT = 'WAYPOINT',
-    PH_TIME = 'PH_TIME',
-    POI = 'POI',
+    PH_TIME = 'POSHOLD_TIME',
+    POI = 'SET_POI',
     LAND = 'LAND'
 
 }

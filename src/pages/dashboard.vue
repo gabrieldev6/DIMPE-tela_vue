@@ -44,7 +44,7 @@ const logout = () => {
   <template v-if="$route.query.token">
     <div class="h-full w-full flex dark:bg-gray-9">
       <!-- sadbar -->
-      <div class="h-full min-w-240px bg-white shadow-2xl z-10 px-4 ">
+      <div class="h-full min-w-240px max-w-240px bg-white shadow-2xl z-10 px-4 ">
         <ul class="list-none py-4 ">
           <li><img :src="logo" alt="" class="w-120px px-5"></li>
 

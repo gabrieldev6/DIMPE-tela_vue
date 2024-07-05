@@ -11,6 +11,7 @@ import Slide from '../components/slideBinary/slideBinary.vue'
 // componentes
 import { MissionItem } from '../types/misson.ts'
 import { Polyline } from '../types/polyline.ts'
+import { Mwp } from '../types/mwp.ts'
 
 // icones de marcadores
 import iconBlue from '../assets/marker-icon-blue.svg'
@@ -43,9 +44,10 @@ let clickedIcon = new L.Icon({
 });
 
 // armazena os dados dos pontos para criar arquivo
-let listpoint = ref<Array<MissionItem>>([]) //meta dados
+let listPoint = ref<Array<MissionItem>>([]) //meta dados
 let listMarker = ref<Array<any>>([]) //marcadores visuais
 
+let mwpRef = ref<Mwp>()
 // armazena as linhas do mapa
 let polylines = ref<Array<any>>([]) //metadados
 let polylineRef = ref<any>() //referencia da linhas visuais
@@ -56,18 +58,18 @@ let fileContent = ref<string | ArrayBuffer | null | undefined>('')
 
 // inputs
 let nameFile = ref<string>('')
-let index = ref<number>(0)
+
 let indexPoint = ref<number>(0)
 let typeInput = ref<string>('WAYPOINT')
-let latInput = ref<number>()
-let lonInput = ref<number>()
-let heightInput = ref<number>()
+let latInput = ref<number>(0)
+let lonInput = ref<number>(0)
+let heightInput = ref<number>(0)
 let distance = ref<number>(0)
 let refMar = ref<boolean>(false)
 let centerX = ref<number>(-7.123134)
 let centerY = ref<number>(-41.688980)
 let zoom = ref<number>(4)
-let speedInput = ref<number>()
+let speedInput = ref<number>(0)
 let waitTimeInput = ref<number>(0)
 
 let isPHTIMEactive = ref<boolean>(false)
@@ -83,6 +85,7 @@ onMounted(() => {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map)
 
+
     layerGroup.addTo(map)
     layerGroupLines.addTo(map)
 
@@ -91,11 +94,11 @@ onMounted(() => {
 
 const addMarker = (e: L.LeafletMouseEvent) => {
     const { lat, lng } = e.latlng
-    index.value = index.value + 1
 
 
-    let point = new MissionItem(index.value, typeInput.value, lat, lng, heightInput.value || 1, speedInput.value || 1, refMar.value ? 1 : 0, waitTimeInput.value, 0)
-    listpoint.value.push(point)
+
+    let point = new MissionItem(listPoint.value.length, typeInput.value, lat, lng, heightInput.value || 1, speedInput.value || 1, refMar.value ? 1 : 0, waitTimeInput.value, 0)
+    listPoint.value.push(point)
 
 
 
@@ -124,7 +127,7 @@ const addMarker = (e: L.LeafletMouseEvent) => {
         marker.setIcon(currentIcon === defaultIcon ? clickedIcon : defaultIcon)
 
         // atualiza os inputs 
-        listpoint.value.forEach((point) => {
+        listPoint.value.forEach((point) => {
             if (point.lat == lat, point.lon == lng) {
 
                 indexPoint.value = point.no
@@ -156,14 +159,13 @@ const setAllMarkersToDefault = () => {
 // deletar todos os estados
 const deleteAllPoints = () => {
 
-    listpoint.value = []
+    listPoint.value = []
     polylines.value = []
 
     listMarker.value = []
 
     // inputs
     distance.value = 0
-    index.value = 0
     indexPoint.value = 0
     lonInput.value = 0
     latInput.value = 0
@@ -181,54 +183,37 @@ const deleteAllPoints = () => {
 
 // delete um ponto especifico
 const deletePoint = () => {
-    console.log(listpoint.value.length)
-    if (listpoint.value.length > 1) {
-        listpoint.value.forEach((point, index) => {
-            console.log(point)
-            if (indexPoint.value - 1 == index) {
+    
 
+    listPoint.value.forEach((point) => {
 
-                console.log(`point escolhido 1: ${indexPoint.value - 1}`)
-                console.log(`point escolhido 2: ${index}`)
+        if (point.no == indexPoint.value) {
 
-                // remove dado do array
-                listpoint.value.splice(indexPoint.value - 1, 1)
+            // remove dado do array
+            listPoint.value.splice(indexPoint.value, 1)
 
-                // reorganiza os indices do array de dados
-                for (let i = indexPoint.value - 1; i < listpoint.value.length; i++) {
-                    listpoint.value[i].no = listpoint.value[i].no - 1
+            // remove todas as linhas
+            layerGroupLines.clearLayers()
+            // tira da lista a linha que nao existe mais
+            polylines.value.splice(indexPoint.value, 1)
 
-                }
+            // adiciona a lista o novo caminh
+            polylineRef.value.setLatLngs(polylines.value)
+            // add o novo caminho a camada
+            polylineRef.value.addTo(layerGroupLines)
 
-                // remove do array a linha do mapa que liga dois vertices
-                layerGroupLines.clearLayers()
-                polylines.value.splice(indexPoint.value - 1, 1)
+            // remove o ponto mapa
+            const marker = listMarker.value.splice(indexPoint.value, 1)
+            layerGroup.removeLayer(marker[0])
 
+        }
 
-                polylineRef.value.setLatLngs(polylines.value)
-                polylineRef.value.addTo(layerGroupLines)
-
-                // remove o ponto mapa
-                const marker = listMarker.value.splice(indexPoint.value - 1, 1)
-
-                // reorganizar os pontos do 
-                listMarker.value.forEach((marker) => {
-                    console.log(marker)
-                })
-                layerGroup.removeLayer(marker[0])
-
-            }
-
-        })
-
-
-    } else if (listpoint.value.length <= 1) {
-
-        deleteAllPoints()
+    })
+    // reorganiza os indices do array de dados apos ser apagado
+    for (let i = 0; i < listPoint.value.length; i++) {
+        listPoint.value[i].no = i
     }
 
-
-    // index.value = listpoint.value.length
     // atualiza os valores de distancia apos apagar algum ponto
     distance.value = 0
     updateDistance()
@@ -237,10 +222,10 @@ const deletePoint = () => {
 watchEffect(() => {
 
     // quando houver algum alteracao nos valores
-    listpoint.value.map((point) => {
+    listPoint.value.map((point) => {
         if (point.lat == latInput.value, point.lon == lonInput.value) {
 
-            index.value = point.no
+            indexPoint.value = point.no
             point.action = typeInput.value
             point.alt = heightInput.value || 1
             point.parameter1 = speedInput.value || 10
@@ -257,15 +242,23 @@ watchEffect(() => {
 
     })
 
+
+    if (listPoint.value.length > 1) {
+        mwpRef.value = new Mwp(listPoint.value[0].lat, listPoint.value[0].lon, 0, 0, 14)
+    }
+
 })
 
 // destruindo os valores
 onUnmounted(() => {
     deleteAllPoints()
 })
+
 const downloadFile = () => {
-    console.log(listpoint.value)
+    console.log(mwpRef.value)
+    console.log(listPoint.value)
 }
+
 // lendo o arquivo upado
 const getValueFile = (event: any) => {
 
@@ -283,22 +276,22 @@ const getValueFile = (event: any) => {
             const { missionItems, polyline } = parseMissonItems(fileContent.value)
 
             console.log(missionItems, polyline)
-            listpoint.value = missionItems
+            listPoint.value = missionItems
             // polylines.value = polyline
             map.setView([centerX.value, centerY.value], zoom.value)
 
-            listpoint.value.forEach((item) => {
+            listPoint.value.forEach((item) => {
                 const marker = L.marker([item.lat, item.lon], { icon: defaultIcon }).addTo(layerGroup)
 
                 listMarker.value.push(marker)
                 polylines.value.push([item.lat, item.lon])
 
                 marker.on('click', (e: L.LeafletMouseEvent) => {
-                    const {lat, lng} = e.latlng
+                    const { lat, lng } = e.latlng
                     setAllMarkersToDefault()
                     const currentIcon = marker.getIcon()
                     marker.setIcon(currentIcon === defaultIcon ? clickedIcon : defaultIcon)
-                    listpoint.value.forEach((point) => {
+                    listPoint.value.forEach((point) => {
                         if (point.lat == lat, point.lon == lng) {
 
                             indexPoint.value = point.no
@@ -414,11 +407,11 @@ const parseMissonItems = (xmlString: string) => {
 
 const updateDistance = () => {
     // calcula a distancia de todos os pontos
-    if (listpoint.value.length > 1) {
+    if (listPoint.value.length > 1) {
         // vai pegar o antipenultimo e o ultimo ponto, calcular a distancia e soma ao que ja foi calculado 
-        for (let i = listpoint.value.length - 2; i < listpoint.value.length - 1; i++) {
+        for (let i = listPoint.value.length - 2; i < listPoint.value.length - 1; i++) {
 
-            distance.value = distance.value + distanceCalculation(listpoint.value[i].lat, listpoint.value[i].lon, listpoint.value[i + 1].lat, listpoint.value[i + 1].lon)
+            distance.value = distance.value + distanceCalculation(listPoint.value[i].lat, listPoint.value[i].lon, listPoint.value[i + 1].lat, listPoint.value[i + 1].lon)
 
         }
 
@@ -454,7 +447,7 @@ const handleStateChanged = (newState: boolean) => {
 
 }
 const switchPopupDelete = () => {
-    warningActive.value=!warningActive.value
+    warningActive.value = !warningActive.value
 }
 
 const confirmDeleteAllPoint = () => {
@@ -534,7 +527,7 @@ const confirmDeleteAllPoint = () => {
                 <li class="flex items-center mb-10px">
                     <div class="w-120px"><label for="">Altura (m):</label> </div>
                     <input v-model="heightInput" class="border-solid border-gray border-1px rounded-md h-20px px-1"
-                        type="number" min="1" max="100" name="" id="">
+                        type="number" min="0" max="100" name="" id="">
 
                 </li>
                 <!-- slider -->
@@ -556,7 +549,7 @@ const confirmDeleteAllPoint = () => {
                 <li class="flex items-center mb-10px">
                     <div class="w-120px"><label for="">Velocidade (cm/s):</label> </div>
                     <input v-model="speedInput" class="border-solid border-gray border-1px rounded-md h-20px px-1"
-                        type="number" min="1" max="1000" name="" id="">
+                        type="number" min="0" max="1000" name="" id="">
 
                 </li>
                 <li v-if="isPHTIMEactive" class="flex items-center mb-10px">
@@ -575,29 +568,30 @@ const confirmDeleteAllPoint = () => {
             </ul>
 
         </div>
-        
+
         <!-- mapa -->
         <div id="map" ref="mapContainer" class="w-full h-full"></div>
-        
+
         <!-- fundo popup -->
-        <div v-if="warningActive" class="w-80% h-92% z-1000 flex absolute justify-center items-center backdrop-blur-sm" >
-            
+        <div v-if="warningActive" class="w-100% h-92% z-1000 flex fixed justify-center items-center backdrop-blur-sm">
+
             <!-- popup -->
-            <div class="w-500px h-80px shadow flex justify-around items-center bg-white rounded-2 border-solid border-l-4 border-l-blue-500">
+            <div
+                class="w-500px h-80px shadow flex fixed justify-around items-center bg-white rounded-2 border-solid border-l-4 border-l-blue-500">
                 <h4>Quer mesmo deletar tudo?</h4>
-                <div class="flex" >
+                <div class="flex">
 
                     <button @click="switchPopupDelete"
                         class="w-100px h-40px shadow  flex items-center justify-center p-2 mx-5px text-black hover:bg-gray-100 bg-white rounded-1">
                         <h4>Cancelar</h4>
                     </button>
 
-                    <button  @click="confirmDeleteAllPoint"
+                    <button @click="confirmDeleteAllPoint"
                         class="w-100px h-40px shadow flex items-center justify-center p-2 mx-5px text-white hover:bg-red-600 bg-red-500 rounded-1">
                         <h4>Deletar</h4>
                     </button>
                 </div>
-                
+
             </div>
         </div>
 

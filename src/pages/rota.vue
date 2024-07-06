@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
-import { ref, onUnmounted, onMounted, watchEffect } from "vue";
+import { ref, onUnmounted, onMounted, watchEffect} from "vue";
 
 import Slide from '../components/slideBinary/slideBinary.vue'
 
@@ -57,6 +57,7 @@ let listTypeWP = ref<Array<string>>(['WAYPOINT', 'POSHOLD_TIME', 'SET_POI', 'LAN
 let fileContent = ref<string | ArrayBuffer | null | undefined>('')
 
 // inputs
+let inputKey = ref(Date.now())
 let nameFile = ref<string>('')
 
 let indexPoint = ref<number>(0)
@@ -77,6 +78,8 @@ let warningActive = ref<boolean>(false)
 
 
 onMounted(() => {
+    
+
     // o mapa vai iniciar com o centro e zoom nesses valores
     map = L.map(mapContainer.value).setView([centerX.value, centerY.value], zoom.value)
 
@@ -95,16 +98,10 @@ onMounted(() => {
 const addMarker = (e: L.LeafletMouseEvent) => {
     const { lat, lng } = e.latlng
 
-
-
-    let point = new MissionItem(listPoint.value.length, typeInput.value, lat, lng, heightInput.value || 1, speedInput.value || 1, refMar.value ? 1 : 0, waitTimeInput.value, 0)
+    let point = new MissionItem(listPoint.value.length+1, typeInput.value, lat, lng, heightInput.value || 1, speedInput.value || 1, refMar.value ? 1 : 0, waitTimeInput.value, 0)
     listPoint.value.push(point)
 
-
-
-    const marker = L.marker(e.latlng, { icon: defaultIcon })
-
-
+    const marker = L.marker(e.latlng, { icon: defaultIcon,  draggable: true})
 
     listMarker.value.push(marker)
     polylines.value.push(e.latlng)
@@ -114,12 +111,9 @@ const addMarker = (e: L.LeafletMouseEvent) => {
     const polyline = L.polyline([polylines.value]).addTo(layerGroupLines)
     polylineRef.value = polyline
 
-
-
     marker.on('click', (e: L.LeafletMouseEvent) => {
 
         const { lat, lng } = e.latlng
-
 
         // troca a cor quando clica
         setAllMarkersToDefault()
@@ -149,6 +143,7 @@ const addMarker = (e: L.LeafletMouseEvent) => {
     updateDistance()
 }
 
+
 // vai atualizar a cor do marcador quando clicar no marcador
 const setAllMarkersToDefault = () => {
     listMarker.value.forEach(marker => {
@@ -164,7 +159,7 @@ const deleteAllPoints = () => {
 
     listMarker.value = []
 
-    // inputs
+    // // inputs
     distance.value = 0
     indexPoint.value = 0
     lonInput.value = 0
@@ -173,12 +168,14 @@ const deleteAllPoints = () => {
     refMar.value = false
     speedInput.value = 0
 
-    // arquivo
+    // // arquivo
     nameFile.value = ''
     fileContent.value = ''
 
     layerGroup.clearLayers()
     layerGroupLines.clearLayers()
+
+    inputKey.value = Date.now()
 }
 
 // delete um ponto especifico
@@ -190,12 +187,12 @@ const deletePoint = () => {
         if (point.no == indexPoint.value) {
 
             // remove dado do array
-            listPoint.value.splice(indexPoint.value, 1)
+            listPoint.value.splice(indexPoint.value-1, 1)
 
             // remove todas as linhas
             layerGroupLines.clearLayers()
             // tira da lista a linha que nao existe mais
-            polylines.value.splice(indexPoint.value, 1)
+            polylines.value.splice(indexPoint.value-1, 1)
 
             // adiciona a lista o novo caminh
             polylineRef.value.setLatLngs(polylines.value)
@@ -203,15 +200,16 @@ const deletePoint = () => {
             polylineRef.value.addTo(layerGroupLines)
 
             // remove o ponto mapa
-            const marker = listMarker.value.splice(indexPoint.value, 1)
+            const marker = listMarker.value.splice(indexPoint.value-1, 1)
             layerGroup.removeLayer(marker[0])
 
         }
 
     })
+
     // reorganiza os indices do array de dados apos ser apagado
     for (let i = 0; i < listPoint.value.length; i++) {
-        listPoint.value[i].no = i
+        listPoint.value[i].no = i+1
     }
 
     // atualiza os valores de distancia apos apagar algum ponto
@@ -242,7 +240,7 @@ watchEffect(() => {
 
     })
 
-
+    // ajuste para centralizar o mapa nos pontos marcados
     if (listPoint.value.length > 1) {
         mwpRef.value = new Mwp(listPoint.value[0].lat, listPoint.value[0].lon, 0, 0, 14)
     }
@@ -288,7 +286,9 @@ const getValueFile = (event: any) => {
 
                 marker.on('click', (e: L.LeafletMouseEvent) => {
                     const { lat, lng } = e.latlng
+                    
                     setAllMarkersToDefault()
+                    
                     const currentIcon = marker.getIcon()
                     marker.setIcon(currentIcon === defaultIcon ? clickedIcon : defaultIcon)
                     listPoint.value.forEach((point) => {
@@ -476,7 +476,7 @@ const confirmDeleteAllPoint = () => {
                             <h4 class="flex justify-center items-center">Carregar arquivo</h4>
                         </label>
 
-                        <input @change="getValueFile" name="image" id="inputFoto" type="file" class="hidden">
+                        <input :key="inputKey" @change="getValueFile" name="image" id="inputFoto" type="file" class="hidden">
                     </div>
 
                 </li>

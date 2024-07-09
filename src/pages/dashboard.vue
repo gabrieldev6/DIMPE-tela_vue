@@ -59,7 +59,7 @@ const logout = () => {
             <router-link :to="{ name: 'video', query: { nome: $route.query.nome, token: $route.query.token } }"
               class="no-underline ">
               <button type="submit"
-                class=" bg-white shadow hover:shadow-md w-full text-4 flex items-center text-center my-1 p-2 rounded-2 text-gray-500 border-solid border-l-4 border-l-blue-500">
+                class=" bg-white shadow transition-shadow w-full text-4 flex items-center text-center my-1 p-2 rounded-2 text-gray-500 border-solid border-l-4 border-l-blue-500">
 
                 <font-awesome-icon icon="fa-solid fa-table-columns" class="mx-2" />
                 Dashboard

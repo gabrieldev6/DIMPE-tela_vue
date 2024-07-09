@@ -1,6 +1,6 @@
 <script setup lang="ts" props="props">
 import {ref, watchEffect} from 'vue'
-
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps(['data', 'id', 'capa'])
 
@@ -28,7 +28,9 @@ function fetchListFrame() {
         <div class="p4">
             <div class="flex justify-between pb2 ">
             <div class="flex">
-                <div class="bg-gray rounded-full shadow-md w-40px h-40px flex justify-center items-center"></div>
+                <div class="bg-white rounded-full shadow-md w-40px h-40px flex justify-center items-center">
+                    <font-awesome-icon icon="fa-solid fa-user" class="color-gray h-20px w-20px m-1" />
+                </div>
                 <div class="px-2">
                     <h4 class="">{{props.id}}</h4>
                     <h6>{{props.data}}</h6>

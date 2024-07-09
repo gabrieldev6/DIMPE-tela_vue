@@ -22,6 +22,7 @@ const { videoInputs } = useDevicesList({
     audio: false
   }
 })
+
 // se a camera nao puder ser aberta ele gera um alerta de erro
 let erro = ref<boolean>(false)
 
@@ -36,6 +37,8 @@ let listBoundingBox = ref<Array<any>>([])
 const worker = new DetectorWorker()
 let boundingBoxes: BoundingBox[] = []
 let dateBoundingBoxes = ref<Array<any>>([])
+
+let date = ref<Date>(new Date())
 
 const input = useLocalStorage('input', '')
 // envia os dados coletados pela ia
@@ -92,7 +95,8 @@ const LISTENERS: Record<string, Function> = {
 watch(dateBoundingBoxes, async (dateBoundingBoxes) => {
   if (dateBoundingBoxes.length != 0 && click.value == true) {
     let dataNow = `frame_${Date.now()}`
-
+    
+    
     if (!canvas2.value || !camera || !ctx2.value) {
       return
     }
@@ -178,7 +182,7 @@ const BOX_STYLE = {
     borderSize: 3,
   },
   label: {
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: 'Arial',
     color: '#fff',
     padding: {
@@ -192,6 +196,7 @@ const BOX_STYLE = {
 async function loop() {
   nextFrame = requestAnimationFrame(loop)
 
+  date.value = new Date()
   if (!canvas.value || !camera || !ctx.value) {
     return
   }
@@ -223,7 +228,7 @@ async function loop() {
 
     draw.fillStyle = box.color
     draw.strokeStyle = box.color
-    draw.lineWidth = BOX_STYLE.box.borderSize
+    draw.lineWidth = BOX_STYLE.box.borderSize-1
 
     draw.strokeRect(
       box.x,
@@ -348,10 +353,10 @@ watch(input, async (input: any) => {
         <h5>Hora</h5>
         <h5>Score</h5>
       </div>
-      <div class="flex justify-between px-3 p-2 items-center">
-        <h5>Classe</h5>
-        <h5>Hora</h5>
-        <h5>Score</h5>
+      <div v-for="item in dateBoundingBoxes" :key="item.x" class="flex justify-between px-3 p-2 items-center">
+        <h5>{{ item.label }}</h5>
+        <h5>{{ date.getHours() }}:{{date.getMinutes()}}:{{date.getSeconds()}}</h5>
+        <h5>{{ item.score.toFixed(3)*100 }}%</h5>
       </div>
     </div>
 

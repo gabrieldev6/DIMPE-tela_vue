@@ -24,12 +24,16 @@ onMounted(async ()=> {
 
 </script>
 <template>
-    <div class=" w-100% h-30% flex flex-wrap justify-center items-center">
+    <div class=" w-100% h-30% flex items-center flex-wrap">
         
             <Card v-for="list in listsFrames" :key="list.id_list" :data="list.data" :capa="list.capa" :id="list.id_list"></Card>
-            <div v-if="listsFrames!" class="color-gray-600">
-            <h2>Ainda está vazio :/</h2>
-            Crie algum relatorio para que ele possa aparecer aqui...
+            
+            <div v-if="listsFrames.length == 0" class="w-full h-full flex justify-center items-center color-gray-600">
+                <div>
+                    <h2>Ainda está vazio :/</h2>
+                    Crie algum relatorio para que ele possa aparecer aqui...
+                </div>
+                
             </div>
        
 

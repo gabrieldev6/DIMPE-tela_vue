@@ -12,6 +12,9 @@ import { googleLogout } from 'vue3-google-login';
 
 import SlideBinary from '../components/slideBinary/slideBinary.vue';
 
+import { useDark } from '@vueuse/core'
+
+const isDark = useDark()
 
 
 library.add(fas);
@@ -19,7 +22,7 @@ library.add(fas);
 let saudacoes = ref('')
 let hours = new Date()
 let refMar = ref<boolean>(false)
-// let props = defineProps([token])
+
 
 watchEffect(() => {
 
@@ -36,11 +39,7 @@ const logout = () => {
 
 }
 
-const handleStateChanged = (newState: boolean) => {
 
-refMar.value = newState
-
-}
 // const isMenuOpen = ref(false)
 
 </script>
@@ -48,16 +47,16 @@ refMar.value = newState
 <template>
 
   <template v-if="$route.query.token">
-    <div class="h-full w-full flex dark:bg-gray-9">
-      <!-- sadbar -->
-      <div class="h-full dark:bg-gray-900  min-w-240px max-w-240px bg-white shadow-2xl z-10 px-4 ">
+    <div class="h-full w-full flex dark:bg-gray-900">
+      <!-- bavigationBar -->
+      <div class="h-full   min-w-240px max-w-240px bg-white shadow-2xl z-10 px-4 dark:bg-gray-900 dark:shadow-black">
         <ul class="list-none py-4 ">
           <li><img :src="logo" alt="" class="w-120px px-5"></li>
 
           <li class="py-4">
-            <div class="border-solid border-2 border-gray-400 rounded-2 flex justify-between items-center">
+            <div class="border-solid border-2 border-gray-400 rounded-2 flex justify-between items-center dark:border-gray-500 dark:bg-gray-800">
               <font-awesome-icon icon="fa-solid fa-magnifying-glass" class="ml-4 text-gray-500 " />
-              <input class="border-4 p-2 text-4 rounded-2 focus:outline-none w-80%" type="text" placeholder="Search">
+              <input class="border-4 p-2 text-4 rounded-2 focus:outline-none w-80% dark:border-l-gray dark:bg-gray-800 dark:color-gray" type="text" placeholder="Search">
             </div>
           </li>
 
@@ -65,7 +64,7 @@ refMar.value = newState
             <router-link :to="{ name: 'video', query: { nome: $route.query.nome, token: $route.query.token } }"
               class="no-underline ">
               <button type="submit"
-                class=" bg-white shadow transition-shadow w-full text-4 flex items-center text-center my-1 p-2 rounded-2 text-gray-500 border-solid border-l-4 border-l-blue-500">
+                class=" bg-white shadow transition-shadow w-full text-4 flex items-center text-center my-1 p-2 rounded-2 text-gray-500 border-solid border-l-4 border-l-blue-500 dark:border-l-blue-900 dark:bg-gray-800 dark:color-gray">
 
                 <font-awesome-icon icon="fa-solid fa-table-columns" class="mx-2" />
                 Dashboard
@@ -77,7 +76,7 @@ refMar.value = newState
             <router-link :to="{ name: 'analitico', query: { nome: $route.query.nome, token: $route.query.token } }"
               class="no-underline">
               <button type="submit"
-                class=" bg-white shadow hover:shadow-md w-full text-4  flex items-center text-center my-1 p-2 rounded-2  text-gray-500 border-solid border-l-4 border-l-blue-500">
+                class=" bg-white shadow hover:shadow-md w-full text-4  flex items-center text-center my-1 p-2 rounded-2  text-gray-500 border-solid border-l-4 border-l-blue-500 dark:border-l-blue-900 dark:bg-gray-800 dark:color-gray">
                 <font-awesome-icon icon="fa-solid fa-chart-line" class="mx-2 " />
                 Analitico
               </button>
@@ -87,7 +86,7 @@ refMar.value = newState
             <router-link :to="{ name: 'rota', query: { nome: $route.query.nome, token: $route.query.token } }"
               class="no-underline">
               <button type="submit"
-                class=" bg-white shadow hover:shadow-md w-full text-4  flex items-center text-center my-1 p-2 rounded-2  text-gray-500 border-solid border-l-4 border-l-blue-500">
+                class=" bg-white shadow hover:shadow-md w-full text-4  flex items-center text-center my-1 p-2 rounded-2  text-gray-500 border-solid border-l-4 border-l-blue-500 dark:border-l-blue-900 dark:bg-gray-800 dark:color-gray">
                 <font-awesome-icon icon="fa-solid fa-location-dot" class="mx-2 " />
                 Gerador de rota
               </button>
@@ -95,7 +94,7 @@ refMar.value = newState
           </li>
           <li>
             <button type="submit"
-              class=" bg-white w-full flex text-4 shadow hover:shadow-md text-gray-500 items-center text-center my-1 p-2 rounded-2 border-solid border-l-4 border-l-blue-500">
+              class=" bg-white  w-full flex text-4 shadow hover:shadow-md text-gray-500 items-center text-center my-1 p-2 rounded-2 border-solid border-l-4 border-l-blue-500 dark:border-l-blue-900 dark:bg-gray-800 dark:color-gray">
               <font-awesome-icon icon="fa-solid fa-toolbox" class="mx-2" />
               Opções
             </button>
@@ -104,7 +103,7 @@ refMar.value = newState
           <li>
             <router-link :to="{ name: 'login' }" @click="logout" class="no-underline">
               <button type="submit"
-                class=" bg-white w-61 flex text-4 shadow hover:shadow-md text-gray-500 items-center text-center my-1 p-2 rounded-2 border-solid border-l-4 border-l-blue-500 absolute bottom-8">
+                class=" bg-white w-61 flex text-4 shadow hover:shadow-md text-gray-500 items-center text-center my-1 p-2 rounded-2 border-solid border-l-4 border-l-blue-500 absolute bottom-8 dark:border-l-blue-900 dark:bg-gray-800 dark:color-gray">
                 <font-awesome-icon icon="fa-solid fa-right-from-bracket" class="mx-2" />
                 Sair da conta
               </button>
@@ -120,22 +119,25 @@ refMar.value = newState
       <div class="w-full">
 
         <!-- barra superior -->
-        <div class="flex bg-white dark:bg-gray-900  h-8% drop-shadow-md justify-between items-center px-4">
+        <div class="flex bg-white h-8% drop-shadow-md justify-between items-center px-4 dark:bg-gray-900 dark:shadow-xl">
 
-          <h2 class="color-gray-600 dark:color-white">{{ saudacoes }} {{ $route.query.nome }}</h2>
+          <h2 class="color-gray-600 dark:color-gray">{{ saudacoes }} {{ $route.query.nome }}</h2>
           <div class="flex justify-center items-center">
             <div class="flex items-center px-4">
               
-              <font-awesome-icon icon="fa-solid fa-sun" class="color-gray-400 dark:color-white h-20px w-20px m-1"/>
-              <SlideBinary :parentState="refMar" @stateChanged="handleStateChanged"/>
-              <font-awesome-icon icon="fa-solid fa-moon" class="color-gray-400 dark:color-white h-20px w-20px m-1"/>
+              <font-awesome-icon icon="fa-solid fa-sun" class="color-gray-400 dark:color-gray h-20px w-20px m-1"/>
+
+
+
+              <SlideBinary v-model="isDark"/>
+              <font-awesome-icon icon="fa-solid fa-moon" class="color-gray-400 dark:color-gray h-20px w-20px m-1"/>
             </div>
               
 
             <router-link :to="{ name: 'perfil', query: { nome: $route.query.nome, token: $route.query.token } }"
               :props="{ nome: $route.query.nome }">
-              <div class=" rounded-full shadow-md w-40px h-40px flex justify-center items-center">
-                <font-awesome-icon icon="fa-solid fa-user" class="color-gray dark:color-white h-20px w-20px m-1" />
+              <div class=" rounded-full shadow-md w-40px h-40px flex justify-center items-center dark:bg-gray-800 dark:color-gray">
+                <font-awesome-icon icon="fa-solid fa-user" class="color-gray dark:color-gray h-20px w-20px m-1" />
 
                 <!-- <img v-else="$route.query.picture" alt="perfil" class="color-gray w-40px h-40px rounded-full" /> -->
               </div>

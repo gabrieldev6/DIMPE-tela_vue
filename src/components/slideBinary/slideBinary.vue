@@ -7,13 +7,14 @@ let bgKnob = ref<HTMLDivElement>()
 
 const props = defineProps(['parentState']);
 const emit = defineEmits(['stateChanged'])
+const model = defineModel()
 
-let click = ref(props.parentState)
+let click = ref(model)
  
-watch(() => props.parentState, (newValue) => {
+watch(() => click.value, (newValue) => {
     
     click.value = newValue
-    console.log(click.value)
+    console.log(model)
     if (click.value == false && knob.value && bgKnob.value) {
 
         knob.value.style.animation = 'transitionKnobFinish 0.2s forwards'
@@ -34,7 +35,7 @@ const toggleState = () => {
 
 </script>
 <template>
-    <div ref="bgKnob" class="bg-gray shadow-inner w-50px h-25px rounded-xl flex items-center">
+    <div ref="bgKnob" class="bg-gray dark:shadow-black w-50px h-25px rounded-xl flex items-center">
         <div ref="knob" @click="toggleState"
             class="bg-white  shadow-md flex rounded-full w-20px h-20px m-2px"></div>
     </div>

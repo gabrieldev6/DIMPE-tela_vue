@@ -28,7 +28,7 @@ onMounted(async ()=> {
         
             <Card v-for="list in listsFrames" :key="list.id_list" :data="list.data" :capa="list.capa" :id="list.id_list"></Card>
             
-            <div v-if="listsFrames.length == 0" class="w-full h-full flex justify-center items-center color-gray-600">
+            <div v-if="listsFrames.length == 0" class="w-full h-full flex justify-center items-center color-gray-600 dark:color-gray">
                 <div>
                     <h2>Ainda está vazio :/</h2>
                     Crie algum relatorio para que ele possa aparecer aqui...

@@ -311,10 +311,10 @@ watch(input, async (input: any) => {
   <div class="ml-4 mt-4">
 
 <!-- min-w-900px min-h-450px -->
-    <div class="items-center bg-white p4 rounded-2 w-650px h-540px "> 
-      <div class="flex w-full my-5px justify-between text-center items-center">
+    <div class="items-center bg-white p4 rounded-2 w-650px h-540px dark:bg-gray-900 dark:color-gray"> 
+      <div class="flex w-full my-5px justify-between text-center items-center ">
         <h3>Transmissão de imagem</h3>
-        <select v-model="input" class="px-4 py-2 rounded-lg">
+        <select v-model="input" class="px-4 py-2 rounded-lg dark:bg-gray-900 dark:color-gray">
           <option disabled selected value="">Câmera</option>
           <option v-for="device in videoInputs" :key="device.deviceId" :value="device.deviceId">{{ device.label }}
           </option>
@@ -339,21 +339,21 @@ watch(input, async (input: any) => {
   </div>
 
   <div class="ml-4 mt-4">
-    <div class="bg-white rounded-2 px4 py2 w-350px h-50px flex justify-between items-center">
+    <div class="bg-white rounded-2 px4 py2 w-350px h-50px flex justify-between items-center dark:bg-gray-900 dark:color-gray">
       <h5>Aperte iniciar para gerar relatorio</h5>
       <button @click="click = !click" class="shadow w-30%  p-2 hover:bg-blue-500 text-white bg-blue rounded-1">{{
           descricao
         }}</button>
     </div>
-    <div class="bg-white rounded-2 p4 w-350px mt-4 ">
+    <div class="bg-white rounded-2 p4 w-350px mt-4 dark:bg-gray-900 dark:color-gray">
       <h3 class="py-10px">Relatorio</h3>
       <canvas ref="canvas2" class="bg-black w-350px h-230px rounded-1"></canvas>
-      <div class="bg-gray-200 flex justify-between px-4 mt1 rounded-1  text-gray-600">
+      <div class="bg-gray-200 flex justify-between px-4 mt1 rounded-1 text-gray-600 dark:bg-gray-800 dark:color-gray">
         <h5>Classe</h5>
         <h5>Hora</h5>
         <h5>Score</h5>
       </div>
-      <div v-for="item in dateBoundingBoxes" :key="item.x" class="flex justify-between px-3 p-2 items-center">
+      <div v-for="item in dateBoundingBoxes" :key="item.x" class="flex justify-between px-3 p-2 items-center ">
         <h5>{{ item.label }}</h5>
         <h5>{{ date.getHours() }}:{{date.getMinutes()}}:{{date.getSeconds()}}</h5>
         <h5>{{ item.score.toFixed(3)*100 }}%</h5>

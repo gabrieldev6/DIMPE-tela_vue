@@ -466,7 +466,7 @@ const confirmDeleteAllPoint = () => {
     <div class="w-100% h-100% z-0 flex">
 
         <!-- menu lateral -->
-        <div class="bg-white dark:bg-gray-900 dark:color-white rounded-xl min-w-380px max-w-380px h-97% m-4 ">
+        <div class="bg-white dark:bg-gray-900 dark:color-gray rounded-xl min-w-380px max-w-380px h-97% m-4 ">
             <div class=" pt-15px pl-15px w-full">
                 <h4 class="mb-5px font-bold text-5">Menu de ações</h4>
             </div>
@@ -512,26 +512,26 @@ const confirmDeleteAllPoint = () => {
                 <!-- tipo -->
                 <li class="flex items-center mb-10px">
                     <div class="w-120px "><label for="">Tipo:</label></div> <select v-model="typeInput"
-                        class="border-solid border-gray border-1px rounded-md w-165px h-20px px-1" id="">
+                        class="border-solid border-gray border-1px rounded-md w-165px h-20px px-1 dark:bg-gray-800 dark:color-gray dark:border-gray-700" id="">
                         <option v-for="types in listTypeWP" :value="types">{{ types }}</option>
                     </select>
                 </li>
                 <!-- latitude -->
                 <li class="flex items-center mb-10px">
                     <div class="w-120px"> <label for="">Latitude:</label> </div>
-                    <input v-model="latInput" class="border-solid border-gray border-1px rounded-md h-20px px-1"
+                    <input v-model="latInput" class="border-solid border-gray border-1px rounded-md h-20px px-1 dark:bg-gray-800 dark:color-gray dark:border-gray-700"
                         type="text" name="" id="">
                 </li>
                 <!-- longitude -->
                 <li class="flex items-center mb-10px">
                     <div class="w-120px"><label for="">Longitude:</label> </div>
-                    <input v-model="lonInput" class="border-solid border-gray border-1px rounded-md h-20px px-1"
+                    <input v-model="lonInput" class="border-solid border-gray border-1px rounded-md h-20px px-1 dark:bg-gray-800 dark:color-gray dark:border-gray-700"
                         type="text" name="" id="">
                 </li>
                 <!-- altitude -->
                 <li class="flex items-center mb-10px">
                     <div class="w-120px"><label for="">Altura (m):</label> </div>
-                    <input v-model="heightInput" class="border-solid border-gray border-1px rounded-md h-20px px-1"
+                    <input v-model="heightInput" class="border-solid border-gray border-1px rounded-md h-20px px-1 dark:bg-gray-800 dark:color-gray dark:border-gray-700"
                         type="number" min="0" max="100" name="" id="">
 
                 </li>
@@ -553,13 +553,13 @@ const confirmDeleteAllPoint = () => {
                 </li>
                 <li class="flex items-center mb-10px">
                     <div class="w-120px"><label for="">Velocidade (cm/s):</label> </div>
-                    <input v-model="speedInput" class="border-solid border-gray border-1px rounded-md h-20px px-1"
+                    <input v-model="speedInput" class="border-solid border-gray border-1px rounded-md h-20px px-1 dark:bg-gray-800 dark:color-gray dark:border-gray-700"
                         type="number" min="0" max="1000" name="" id="">
 
                 </li>
                 <li v-if="isPHTIMEactive" class="flex items-center mb-10px">
                     <div class="w-120px"><label for="">Tempo de espera (s):</label> </div>
-                    <input v-model="waitTimeInput" class="border-solid border-gray border-1px rounded-md h-20px px-1"
+                    <input v-model="waitTimeInput" class="border-solid border-gray border-1px rounded-md h-20px px-1 dark:bg-gray-800 dark:color-gray dark:border-gray-700"
                         type="number" min="1" max="1000" name="" id="">
 
                 </li>
@@ -582,17 +582,17 @@ const confirmDeleteAllPoint = () => {
 
             <!-- popup -->
             <div
-                class="w-500px h-80px shadow flex fixed justify-around items-center bg-white rounded-2 border-solid border-l-4 border-l-blue-500">
+                class="w-500px h-80px shadow flex fixed justify-around items-center bg-white rounded-2 border-solid border-l-4 border-l-blue-500 dark:bg-gray-900 dark:color-white dark:border-l-blue-900">
                 <h4>Quer mesmo deletar tudo?</h4>
                 <div class="flex">
 
                     <button @click="switchPopupDelete"
-                        class="w-100px h-40px shadow  flex items-center justify-center p-2 mx-5px text-black hover:bg-gray-100 bg-white rounded-1">
+                        class="w-100px h-40px shadow  flex items-center justify-center p-2 mx-5px text-black hover:bg-gray-100 bg-white rounded-1 dark:bg-gray-800 dark:color-gray dark:hover:bg-gray-700">
                         <h4>Cancelar</h4>
                     </button>
 
                     <button @click="confirmDeleteAllPoint"
-                        class="w-100px h-40px shadow flex items-center justify-center p-2 mx-5px text-white hover:bg-red-600 bg-red-500 rounded-1">
+                        class="w-100px h-40px shadow flex items-center justify-center p-2 mx-5px text-white hover:bg-red-600 bg-red-500 rounded-1 ">
                         <h4>Deletar</h4>
                     </button>
                 </div>

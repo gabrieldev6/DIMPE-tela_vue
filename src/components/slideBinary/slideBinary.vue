@@ -34,9 +34,9 @@ const toggleState = () => {
 
 </script>
 <template>
-    <div ref="bgKnob" class="bg-gray w-50px h-25px rounded-xl flex items-center">
+    <div ref="bgKnob" class="bg-gray shadow-inner w-50px h-25px rounded-xl flex items-center">
         <div ref="knob" @click="toggleState"
-            class="bg-white flex rounded-full w-20px h-20px m-2px"></div>
+            class="bg-white  shadow-md flex rounded-full w-20px h-20px m-2px"></div>
     </div>
 </template>
 
@@ -45,7 +45,7 @@ const toggleState = () => {
 <style>
 @keyframes transitionColorInit {
     from {
-        background-color:#9ca3af;
+        background-color:rgb(156 163 175);
         
     } to {
         
@@ -58,7 +58,7 @@ const toggleState = () => {
         background-color:#3b82f6;
     } to {
         
-        background-color: #9ca3af;
+        background-color:rgb(156 163 175);
     }
 }
 

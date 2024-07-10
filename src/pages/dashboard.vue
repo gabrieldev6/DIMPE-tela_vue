@@ -1,6 +1,5 @@
 <script setup lang="ts">
-// import { RouterView } from 'vue-router'
-// import { ref, Transition } from 'vue'
+
 
 import { watchEffect, ref } from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -11,7 +10,7 @@ import { RouterLink } from 'vue-router';
 import logo from "../assets/logoDimpe.png"
 import { googleLogout } from 'vue3-google-login';
 
-// import { decodeCredential } from 'vue3-google-login';
+import SlideBinary from '../components/slideBinary/slideBinary.vue';
 
 
 
@@ -19,6 +18,7 @@ library.add(fas);
 
 let saudacoes = ref('')
 let hours = new Date()
+let refMar = ref<boolean>(false)
 // let props = defineProps([token])
 
 watchEffect(() => {
@@ -35,6 +35,12 @@ const logout = () => {
   googleLogout()
 
 }
+
+const handleStateChanged = (newState: boolean) => {
+
+refMar.value = newState
+
+}
 // const isMenuOpen = ref(false)
 
 </script>
@@ -44,7 +50,7 @@ const logout = () => {
   <template v-if="$route.query.token">
     <div class="h-full w-full flex dark:bg-gray-9">
       <!-- sadbar -->
-      <div class="h-full min-w-240px max-w-240px bg-white shadow-2xl z-10 px-4 ">
+      <div class="h-full dark:bg-gray-900  min-w-240px max-w-240px bg-white shadow-2xl z-10 px-4 ">
         <ul class="list-none py-4 ">
           <li><img :src="logo" alt="" class="w-120px px-5"></li>
 
@@ -114,16 +120,22 @@ const logout = () => {
       <div class="w-full">
 
         <!-- barra superior -->
-        <div class="flex bg-white h-8% drop-shadow-md justify-between items-center px-4">
+        <div class="flex bg-white dark:bg-gray-900  h-8% drop-shadow-md justify-between items-center px-4">
 
-          <h2 class="color-gray-600">{{ saudacoes }} {{ $route.query.nome }}</h2>
+          <h2 class="color-gray-600 dark:color-white">{{ saudacoes }} {{ $route.query.nome }}</h2>
           <div class="flex justify-center items-center">
-            <font-awesome-icon icon="fa-solid fa-gear" class="color-gray h-25px w-25px mx-20px" />
+            <div class="flex items-center px-4">
+              
+              <font-awesome-icon icon="fa-solid fa-sun" class="color-gray-400 dark:color-white h-20px w-20px m-1"/>
+              <SlideBinary :parentState="refMar" @stateChanged="handleStateChanged"/>
+              <font-awesome-icon icon="fa-solid fa-moon" class="color-gray-400 dark:color-white h-20px w-20px m-1"/>
+            </div>
+              
 
             <router-link :to="{ name: 'perfil', query: { nome: $route.query.nome, token: $route.query.token } }"
               :props="{ nome: $route.query.nome }">
               <div class=" rounded-full shadow-md w-40px h-40px flex justify-center items-center">
-                <font-awesome-icon icon="fa-solid fa-user" class="color-gray h-20px w-20px m-1" />
+                <font-awesome-icon icon="fa-solid fa-user" class="color-gray dark:color-white h-20px w-20px m-1" />
 
                 <!-- <img v-else="$route.query.picture" alt="perfil" class="color-gray w-40px h-40px rounded-full" /> -->
               </div>
@@ -133,7 +145,7 @@ const logout = () => {
           </div>
 
         </div>
-        <div class='dark'></div>
+        
         <!-- visualição das rotas -->
         <div class="flex flex-wrap   bg-gray-200 dark:bg-gray-800 border-4 w-full h-92% overflow-y-scroll">
 

@@ -7,22 +7,21 @@ import api from '../../service/api';
 import { useRoute } from 'vue-router'
 
 import { DataImg } from './dataImg.ts'
-
+import Loading from '../loading/loading.vue'
 library.add(fas);
 
 // let frames = ref<Array<Buffer>>([])
 
 let listImg = ref<Array<DataImg>>([])
 let index = ref<number>(0)
-
-
+let progressRef = ref<number>(0)
 const route = useRoute()
 
 onMounted( async () => {
-
-
+    progressRef.value = 25
     await api.get(`/getFrame/${route.query.id}`)
     .then((response) => {
+        progressRef.value = 50
         if (response.status == 200) {
             let imagens = response.data.frames
             imagens.map((frame: any) => {
@@ -33,8 +32,9 @@ onMounted( async () => {
                 return frame
             })
         }
+       
     })
-    
+    progressRef.value=100
 })
 
 const backImage = () => {
@@ -46,6 +46,7 @@ const backImage = () => {
     }
     
 }
+
 const nextImage = () => {
     if(index.value >= listImg.value.length-1) {
         console.log(index.value)
@@ -56,14 +57,8 @@ const nextImage = () => {
     
 }
 
-const jumpIndex = (e: any) => {
-    listImg.value.map((img, indexImg) => {
-        
-        if(img.id_frame === e) {
-            index.value = indexImg
-            
-        }
-    })
+const jumpIndex = (e: number) => {
+    index.value = e
     
 }
 </script>
@@ -75,22 +70,22 @@ const jumpIndex = (e: any) => {
                 <div class="bg-white w-full h-12 flex items-center">
                     <router-link
                         :to="{ name: 'analitico', query: { nome: $route.query.nome, picture: $route.query.picture, token: $route.query.token } }">
-                        <button class="bg-white flex justify-center items-center rounded-full p-5px mx-4 hover:cursor-pointer hover:bg-gray-200 transition-colors shadow-xl">
+                        <button class="bg-white flex justify-center items-center rounded-full p-2 mx-4 hover:cursor-pointer hover:bg-gray-200 transition-colors shadow-xl">
                             <font-awesome-icon icon="fa-solid fa-x" class="h-18px w-18px c-gray-500" />
                         </button>
                     </router-link>
 
                 </div>
             </li>
-            <li class="h-72% flex justify-center items-center">
-                <div class="w-full h-full flex items-center justify-center">
+            <li v-if="listImg.length > 0" class="h-72% x-0 flex justify-center items-center">
+                <div class="bg-white w-1100px h-90% flex items-center justify-center px-2 py-4 rounded-xl">
 
                     <button @click="backImage"
                         class="w-50px h-50px bg-white flex justify-center items-center rounded-full m-4 hover:cursor-pointer hover:bg-gray-200 transition-colors shadow-xl">
                         <font-awesome-icon icon="fa-solid fa-chevron-left" class="h-20px w-20px c-gray-500" />
                     </button>
 
-                    <div v-if="listImg.length > 0" class="max-w-600px w-60% flex justify-center items-center">
+                    <div  class="max-w-600px w-60% flex justify-center items-center">
                         <img :src="listImg[index].caminho" class="bg-black color-white w-full h-full " alt="e aaae">
                     </div>
 
@@ -101,12 +96,19 @@ const jumpIndex = (e: any) => {
 
                 </div>
             </li>
+            <li v-else class="h-72% x-0 flex justify-center items-center">
+                <div class="bg-white w-1100px h-90% flex items-center justify-center px-2 py-4 rounded-xl">
+                    <Loading :progress="progressRef" ></Loading>
+                </div>
+            </li>
             <li class="flex justify-center">
-                <div class="shadow-xl bg-white w-1100px h-90px flex mx-4 p-2 rounded-xl items-center overflow-x-auto focus:overscroll-contain">
+                <div class="shadow-xl z-1 bg-white w-1100px h-90px flex mx-4 p-2 rounded-xl items-center overflow-x-auto focus:overscroll-contain">
 
-                    <div v-for="imagem in listImg" class="bg-gray-300 rounded-lg p-2 mx-1">
+                    <div v-for="(imagem, indexImg) in listImg" :class="['thumbnail', indexImg === index ? 'bg-gray-300 rounded-lg p-1 mx-1 hover:bg-gray-300 ' : 'rounded-lg p-1 mx-1 hover:bg-gray-300 ']">
                         
-                        <img @click="jumpIndex(imagem.id_frame)" :src="imagem.caminho" class="w-90px hover:cursor-pointer" :key="imagem.id_frame" alt="">
+                            <img @click="jumpIndex(indexImg)" :src="imagem.caminho" class="w-80px hover:cursor-pointer" :key="imagem.id_frame" alt="">
+                        
+                        
                         
                     </div>
                 </div>

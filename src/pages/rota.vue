@@ -101,7 +101,7 @@ const addMarker = (e: L.LeafletMouseEvent) => {
     let point = new MissionItem(listPoint.value.length+1, typeInput.value, lat, lng, heightInput.value || 1, speedInput.value || 1, refMar.value ? 1 : 0, waitTimeInput.value, 0)
     listPoint.value.push(point)
 
-    const marker = L.marker(e.latlng, { icon: defaultIcon,  draggable: true})
+    const marker = L.marker(e.latlng, { icon: defaultIcon}) //, draggable: true
 
     listMarker.value.push(marker)
     polylines.value.push(e.latlng)
@@ -137,12 +137,17 @@ const addMarker = (e: L.LeafletMouseEvent) => {
         })
 
     })
-
+    marker.on('dragend', dragendingMarker)
 
     // calcula a distancia de todos os pontos
     updateDistance()
 }
-
+const dragendingMarker = (e: any) => {
+    const { lat, lng } = e.latlng
+    latInput.value = lat
+    lonInput.value = lng
+    console.log(e)
+}
 
 // vai atualizar a cor do marcador quando clicar no marcador
 const setAllMarkersToDefault = () => {
@@ -461,7 +466,7 @@ const confirmDeleteAllPoint = () => {
     <div class="w-100% h-100% z-0 flex">
 
         <!-- menu lateral -->
-        <div class="bg-white rounded-xl min-w-380px max-w-380px h-90% m-4 ">
+        <div class="bg-white dark:bg-gray-900 dark:color-white rounded-xl min-w-380px max-w-380px h-97% m-4 ">
             <div class=" pt-15px pl-15px w-full">
                 <h4 class="mb-5px font-bold text-5">Menu de ações</h4>
             </div>
@@ -500,7 +505,7 @@ const confirmDeleteAllPoint = () => {
                 </li>
                 <li class="mb-5px">Distância (m): {{ Math.round(distance) }}</li>
             </ul>
-            <ul class="list-none px-15px">
+            <ul class="list-none px-15px ">
                 <li>
                     <h4 class="flex">Editar ponto: {{ indexPoint }}</h4>
                 </li>

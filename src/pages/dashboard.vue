@@ -7,7 +7,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { RouterLink } from 'vue-router';
 
-import logo from "../assets/logoDimpe.png"
+import logo from "../assets/logoDimpe.svg"
 import { googleLogout } from 'vue3-google-login';
 
 import SlideBinary from '../components/slideBinary/slideBinary.vue';
@@ -51,10 +51,10 @@ const logout = () => {
       <!-- bavigationBar -->
       <div class="h-full   min-w-240px max-w-240px bg-white shadow-2xl z-10 px-4 dark:bg-gray-900 dark:shadow-black">
         <ul class="list-none py-4 ">
-          <li><img :src="logo" alt="" class="w-120px px-5"></li>
+          <li><img :src="logo" alt="" class="w-120px px-5 dark:color-white"></li>
 
           <li class="py-4">
-            <div class="border-solid border-2 border-gray-400 rounded-2 flex justify-between items-center dark:border-gray-500 dark:bg-gray-800">
+            <div class="border-solid border-2 border-gray-400 rounded-2 flex justify-between items-center dark:bg-gray-800 dark:border-gray-700">
               <font-awesome-icon icon="fa-solid fa-magnifying-glass" class="ml-4 text-gray-500 " />
               <input class="border-4 p-2 text-4 rounded-2 focus:outline-none w-80% dark:border-l-gray dark:bg-gray-800 dark:color-gray" type="text" placeholder="Search">
             </div>

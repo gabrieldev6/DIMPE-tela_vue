@@ -97,7 +97,7 @@ const jumpIndex = (e: number) => {
                         <font-awesome-icon icon="fa-solid fa-chevron-left" class="h-20px w-20px c-gray-500" />
                     </button>
 
-                    <div class="w-80% flex justify-center items-center">
+                    <div class="w-80% max-w-970px flex justify-center items-center">
                         <img :src="listImg[index].caminho" class="bg-black color-white w-full h-full " alt="e aaae">
                     </div>
 
@@ -115,7 +115,7 @@ const jumpIndex = (e: number) => {
                 </div>
             </li>
             <li class="w-20% h-full ">
-                <div class="bg-white w-full h-full mx-4 mt-4 px-4 rounded-xl shadow-xl dark:bg-gray-900 dark:color-gray">
+                <div class="bg-white w-full max-w-370px h-full mx-4 mt-4 px-4 rounded-xl shadow-xl dark:bg-gray-900 dark:color-gray">
                     <h3 class="py-4">Relatorio de patrulha</h3>
 
                     

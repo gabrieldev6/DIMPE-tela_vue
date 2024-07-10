@@ -5,7 +5,7 @@ import {ref, watch} from 'vue'
 let knob = ref<HTMLDivElement>()
 let bgKnob = ref<HTMLDivElement>()
 
-const props = defineProps(['parentState']);
+
 const emit = defineEmits(['stateChanged'])
 const model = defineModel()
 

@@ -21,7 +21,7 @@ library.add(fas);
 
 let saudacoes = ref('')
 let hours = new Date()
-let refMar = ref<boolean>(false)
+
 
 
 watchEffect(() => {

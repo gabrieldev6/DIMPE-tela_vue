@@ -497,7 +497,7 @@ const confirmDeleteAllPoint = () => {
                         <h4>Deletar todos os pontos</h4>
                     </button> </li>
             </ul>
-            <ul class="list-none px-15px">
+            <ul class="list-none p-4 ">
                 <li>
                     <h4>Informações do arquivo</h4>
                 </li>

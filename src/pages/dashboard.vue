@@ -156,7 +156,7 @@ const logout = () => {
 
         </div>
         <!-- <Transition>
-          <div v-if="isMenuOpen" class="barraLateral flex w-90  bg-gray-500 flex justify-center" ><Element></Element></div>
+          <div v-if="isMenuOpen" class="barraLateral flex w-90  bg-gray-500 flex justify-center" ></div>
         </Transition> -->
 
 
@@ -173,9 +173,8 @@ const logout = () => {
 
   </div>
 </template>
-
-<style>
-/* .barraLateral.v-enter-active,
+<!-- <style>
+.barraLateral.v-enter-active,
 .barraLateral.v-leave-active {
   transition: all 1s ease;
 }
@@ -190,9 +189,9 @@ const logout = () => {
   @apply: max-w-100;
 } */
 
-/* button:active {
+button:active {
   background-color: #e2e2e2;
   border-radius: 7px;
   transition: all ease-in;
-} */
-</style>
+}
+</style> -->

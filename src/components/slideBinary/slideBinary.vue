@@ -5,7 +5,7 @@ import {ref, watch} from 'vue'
 let knob = ref<HTMLDivElement>()
 let bgKnob = ref<HTMLDivElement>()
 
-
+const props = defineProps(['parentState']);
 const emit = defineEmits(['stateChanged'])
 const model = defineModel()
 
@@ -14,7 +14,22 @@ let click = ref(model)
 watch(() => click.value, (newValue) => {
     
     click.value = newValue
-    console.log(model)
+    if (click.value == false && knob.value && bgKnob.value) {
+
+        knob.value.style.animation = 'transitionKnobFinish 0.2s forwards'
+        bgKnob.value.style.animation = 'transitionColorFinish 0.2s forwards'
+
+    } else if (knob.value && bgKnob.value) {
+
+        knob.value.style.animation = 'transitionKnobInit 0.2s forwards'
+        bgKnob.value.style.animation = 'transitionColorInit 0.2s forwards'
+    }
+})
+
+watch(() => props.parentState, (newValue) => {
+    
+    click.value = newValue
+    console.log(click.value)
     if (click.value == false && knob.value && bgKnob.value) {
 
         knob.value.style.animation = 'transitionKnobFinish 0.2s forwards'

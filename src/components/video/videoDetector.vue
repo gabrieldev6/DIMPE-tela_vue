@@ -153,9 +153,6 @@ worker.addEventListener('message', (e: any) => {
     LISTENERS[event](e, ...args)
   }
 })
-let modelName = 'yolov7'
-console.log(`${window.location.origin}/${modelName}_web_model/model.json`)
-console.log('/yolov7_web_model/model.json')
 worker.postMessage(['load', '/yolov7_web_model/model.json'])
 
 const video = document.createElement('video')
@@ -203,6 +200,7 @@ async function loop() {
 
   canvas.value!.width = video.videoWidth
   canvas.value!.height = video.videoHeight
+  
 
   const draw = ctx.value;
   const frame = tf.browser.fromPixels(video)
@@ -234,7 +232,7 @@ async function loop() {
       box.x,
       box.y,
       box.width,
-      box.height,
+      box.height
     )
 
     const labelHeight = BOX_STYLE.label.fontSize + (BOX_STYLE.label.padding.y * 2)

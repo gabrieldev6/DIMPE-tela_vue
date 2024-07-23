@@ -48,8 +48,8 @@ const logout = () => {
 
   <template v-if="$route.query.token">
     <div class="h-full w-full flex dark:bg-gray-900">
-      <!-- bavigationBar -->
-      <div class="h-full   min-w-240px max-w-240px bg-white shadow-2xl z-10 px-4 dark:bg-gray-900 dark:shadow-black">
+      <!-- navigationBar -->
+      <div class="h-full min-w-240px max-w-240px z-10 hidden sm:flex bg-white shadow-2xl px-4 dark:bg-gray-900 dark:shadow-black">
         <ul class="list-none py-4 ">
           <li><img :src="logo" alt="" class="w-120px px-5 dark:color-white"></li>
 
@@ -121,7 +121,7 @@ const logout = () => {
         <!-- barra superior -->
         <div class="flex bg-white h-8% drop-shadow-md justify-between items-center px-4 dark:bg-gray-900 dark:shadow-xl">
 
-          <h2 class="color-gray-600 dark:color-gray">{{ saudacoes }} {{ $route.query.nome }}</h2>
+          <h2 class="color-gray-600 dark:color-gray text-5 sm:text-7 ">{{ saudacoes }} {{ $route.query.nome }}</h2>
           <div class="flex justify-center items-center">
             <div class="flex items-center px-4">
               
@@ -149,7 +149,7 @@ const logout = () => {
         </div>
         
         <!-- visualição das rotas -->
-        <div class="flex flex-wrap   bg-gray-200 dark:bg-gray-800 border-4 w-full h-92% overflow-y-scroll">
+        <div class="flex flex-wrap   bg-gray-200 dark:bg-gray-800 border-4 w-full h-82% sm:h-92% overflow-y-scroll">
 
 
           <RouterView />
@@ -160,10 +160,66 @@ const logout = () => {
         </Transition> -->
 
 
-
-
+        
+        <!-- navigation bar mobile -->
+        <div class="h-10% flex sm:hidden items-center justify-center shadow-xl">
+          <ul class="w-full flex list-none items-center justify-around">
+            <li>
+            <router-link :to="{ name: 'video', query: { nome: $route.query.nome, token: $route.query.token } }"
+              class="no-underline">
+              <button type="submit"
+                class=" bg-white shadow hover:shadow-md h-15 w-15 text-4 m-1 p-2 rounded-2  text-gray-500 border-solid border-b-4 border-b-blue-500 dark:border-l-blue-900 dark:bg-gray-900 dark:color-gray">
+                <font-awesome-icon icon="fa-solid fa-camera" class="mx-2 w-6 h-6" />
+                <h5 class="font-normal">Camera</h5>
+                
+              </button>
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="{ name: 'analitico', query: { nome: $route.query.nome, token: $route.query.token } }"
+              class="no-underline">
+              <button type="submit"
+                class=" bg-white shadow hover:shadow-md h-15 w-15 text-4 m-1 p-2 rounded-2  text-gray-500 border-solid border-b-4 border-b-blue-500 dark:border-l-blue-900 dark:bg-gray-900 dark:color-gray">
+                <font-awesome-icon icon="fa-solid fa-image" class="mx-2 w-6 h-6" />
+                <h5 class="font-normal">Galeria</h5>
+                
+              </button>
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="{ name: 'rota', query: { nome: $route.query.nome, token: $route.query.token } }"
+              class="no-underline">
+              <button type="submit"
+                class=" bg-white shadow hover:shadow-md h-15 w-15 text-4 m-1 p-2 rounded-2  text-gray-500 border-solid border-b-4 border-b-blue-500 dark:border-l-blue-900 dark:bg-gray-900 dark:color-gray">
+                <font-awesome-icon icon="fa-solid fa-location-dot" class="mx-2 w-6 h-6" />
+                <h5 class="font-normal">Rotas</h5>
+              </button>
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="{ name: 'analitico', query: { nome: $route.query.nome, token: $route.query.token } }"
+              class="no-underline">
+              <button type="submit"
+                class=" bg-white shadow hover:shadow-md h-15 w-15 text-4 m-1 p-2 rounded-2  text-gray-500 border-solid border-b-4 border-b-blue-500 dark:border-l-blue-900 dark:bg-gray-900 dark:color-gray">
+                <font-awesome-icon icon="fa-solid fa-toolbox" class="mx-2 w-6 h-6" />
+                <h5 class="font-normal">Opções</h5>
+              </button>
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="{ name: 'login', query: { nome: $route.query.nome, token: $route.query.token } }"
+              class="no-underline">
+              <button type="submit"
+                class=" bg-white shadow hover:shadow-md h-15 w-15 text-4 m-1 p-2 rounded-2  text-gray-500 border-solid border-b-4 border-b-blue-500 dark:border-l-blue-900 dark:bg-gray-900 dark:color-gray">
+                <font-awesome-icon icon="fa-solid fa-right-from-bracket" class="mx-2 w-6 h-6" />
+                <h5 class="font-normal">Sair</h5>
+              </button>
+            </router-link>
+          </li>
+          </ul>
+        </div>
       </div>
-
+      
 
     </div>
   </template>

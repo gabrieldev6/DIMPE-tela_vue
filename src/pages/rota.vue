@@ -4,10 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
-import { ref, onUnmounted, onMounted, watchEffect} from "vue";
+import { ref, onUnmounted, onMounted, watchEffect } from "vue";
 
 import Slide from '../components/slideBinary/slideBinary.vue'
-
+import DropDownMenu from '../components/menudd/dropdownMenu.vue'
 // componentes
 import { MissionItem } from '../types/misson.ts'
 import { Polyline } from '../types/polyline.ts'
@@ -78,7 +78,7 @@ let warningActive = ref<boolean>(false)
 
 
 onMounted(() => {
-    
+
 
     // o mapa vai iniciar com o centro e zoom nesses valores
     map = L.map(mapContainer.value).setView([centerX.value, centerY.value], zoom.value)
@@ -98,10 +98,10 @@ onMounted(() => {
 const addMarker = (e: L.LeafletMouseEvent) => {
     const { lat, lng } = e.latlng
 
-    let point = new MissionItem(listPoint.value.length+1, typeInput.value, lat, lng, heightInput.value || 1, speedInput.value || 1, refMar.value ? 1 : 0, waitTimeInput.value, 0)
+    let point = new MissionItem(listPoint.value.length + 1, typeInput.value, lat, lng, heightInput.value || 1, speedInput.value || 1, refMar.value ? 1 : 0, waitTimeInput.value, 0)
     listPoint.value.push(point)
 
-    const marker = L.marker(e.latlng, { icon: defaultIcon}) //, draggable: true
+    const marker = L.marker(e.latlng, { icon: defaultIcon }) //, draggable: true
 
     listMarker.value.push(marker)
     polylines.value.push(e.latlng)
@@ -185,19 +185,19 @@ const deleteAllPoints = () => {
 
 // delete um ponto especifico
 const deletePoint = () => {
-    
+
 
     listPoint.value.forEach((point) => {
 
         if (point.no == indexPoint.value) {
 
             // remove dado do array
-            listPoint.value.splice(indexPoint.value-1, 1)
+            listPoint.value.splice(indexPoint.value - 1, 1)
 
             // remove todas as linhas
             layerGroupLines.clearLayers()
             // tira da lista a linha que nao existe mais
-            polylines.value.splice(indexPoint.value-1, 1)
+            polylines.value.splice(indexPoint.value - 1, 1)
 
             // adiciona a lista o novo caminh
             polylineRef.value.setLatLngs(polylines.value)
@@ -205,7 +205,7 @@ const deletePoint = () => {
             polylineRef.value.addTo(layerGroupLines)
 
             // remove o ponto mapa
-            const marker = listMarker.value.splice(indexPoint.value-1, 1)
+            const marker = listMarker.value.splice(indexPoint.value - 1, 1)
             layerGroup.removeLayer(marker[0])
 
         }
@@ -214,7 +214,7 @@ const deletePoint = () => {
 
     // reorganiza os indices do array de dados apos ser apagado
     for (let i = 0; i < listPoint.value.length; i++) {
-        listPoint.value[i].no = i+1
+        listPoint.value[i].no = i + 1
     }
 
     // atualiza os valores de distancia apos apagar algum ponto
@@ -291,9 +291,9 @@ const getValueFile = (event: any) => {
 
                 marker.on('click', (e: L.LeafletMouseEvent) => {
                     const { lat, lng } = e.latlng
-                    
+
                     setAllMarkersToDefault()
-                    
+
                     const currentIcon = marker.getIcon()
                     marker.setIcon(currentIcon === defaultIcon ? clickedIcon : defaultIcon)
                     listPoint.value.forEach((point) => {
@@ -463,10 +463,11 @@ const confirmDeleteAllPoint = () => {
 
 <template>
 
-    <div class="w-100% h-100% z-0 flex">
-
+    <div class="w-full h-full z-0 block sm:flex">
+        <!-- map mobile -->
+        <div id="map" ref="mapContainer" class="w-full h-50% block sm:hidden"></div>
         <!-- menu lateral -->
-        <div class="bg-white dark:bg-gray-900 dark:color-gray rounded-xl min-w-380px max-w-380px h-97% m-4 ">
+        <div class="bg-white dark:bg-gray-900 dark:color-gray rounded-xl min-w-360px max-w-360px w-80% m-4 sm:w-full">
             <div class=" pt-15px pl-15px w-full">
                 <h4 class="mb-5px font-bold text-5">Menu de ações</h4>
             </div>
@@ -481,7 +482,8 @@ const confirmDeleteAllPoint = () => {
                             <h4 class="flex justify-center items-center">Carregar arquivo</h4>
                         </label>
 
-                        <input :key="inputKey" @change="getValueFile" name="image" id="inputFoto" type="file" class="hidden">
+                        <input :key="inputKey" @change="getValueFile" name="image" id="inputFoto" type="file"
+                            class="hidden">
                     </div>
 
                 </li>
@@ -507,75 +509,87 @@ const confirmDeleteAllPoint = () => {
             </ul>
             <ul class="list-none px-15px ">
                 <li>
-                    <h4 class="flex">Editar ponto: {{ indexPoint }}</h4>
-                </li>
-                <!-- tipo -->
-                <li class="flex items-center mb-10px">
-                    <div class="w-120px "><label for="">Tipo:</label></div> <select v-model="typeInput"
-                        class="border-solid border-gray border-1px rounded-md w-165px h-20px px-1 dark:bg-gray-800 dark:color-gray dark:border-gray-700" id="">
-                        <option v-for="types in listTypeWP" :value="types">{{ types }}</option>
-                    </select>
-                </li>
-                <!-- latitude -->
-                <li class="flex items-center mb-10px">
-                    <div class="w-120px"> <label for="">Latitude:</label> </div>
-                    <input v-model="latInput" class="border-solid border-gray border-1px rounded-md h-20px px-1 dark:bg-gray-800 dark:color-gray dark:border-gray-700"
-                        type="text" name="" id="">
-                </li>
-                <!-- longitude -->
-                <li class="flex items-center mb-10px">
-                    <div class="w-120px"><label for="">Longitude:</label> </div>
-                    <input v-model="lonInput" class="border-solid border-gray border-1px rounded-md h-20px px-1 dark:bg-gray-800 dark:color-gray dark:border-gray-700"
-                        type="text" name="" id="">
-                </li>
-                <!-- altitude -->
-                <li class="flex items-center mb-10px">
-                    <div class="w-120px"><label for="">Altura (m):</label> </div>
-                    <input v-model="heightInput" class="border-solid border-gray border-1px rounded-md h-20px px-1 dark:bg-gray-800 dark:color-gray dark:border-gray-700"
-                        type="number" min="0" max="100" name="" id="">
+                    <!-- <h4 class="flex">Editar ponto: {{ indexPoint }}</h4> -->
+                    <DropDownMenu label="Editar ponto: " :number=indexPoint>
+                    <ul class="list-none px-15px ">
+                        <!-- tipo -->
+                        <li class="flex items-center mb-10px">
+                            <div class="w-120px "><label for="">Tipo:</label></div> <select v-model="typeInput"
+                                class="border-solid border-gray border-1px rounded-md w-165px h-20px px-1 dark:bg-gray-800 dark:color-gray dark:border-gray-700"
+                                id="">
+                                <option v-for="types in listTypeWP" :value="types">{{ types }}</option>
+                            </select>
+                        </li>
+                        <!-- latitude -->
+                        <li class="flex items-center mb-10px">
+                            <div class="w-120px"> <label for="">Latitude:</label> </div>
+                            <input v-model="latInput"
+                                class="border-solid border-gray border-1px rounded-md h-20px px-1 dark:bg-gray-800 dark:color-gray dark:border-gray-700"
+                                type="text" name="" id="">
+                        </li>
+                        <!-- longitude -->
+                        <li class="flex items-center mb-10px">
+                            <div class="w-120px"><label for="">Longitude:</label> </div>
+                            <input v-model="lonInput"
+                                class="border-solid border-gray border-1px rounded-md h-20px px-1 dark:bg-gray-800 dark:color-gray dark:border-gray-700"
+                                type="text" name="" id="">
+                        </li>
+                        <!-- altitude -->
+                        <li class="flex items-center mb-10px">
+                            <div class="w-120px"><label for="">Altura (m):</label> </div>
+                            <input v-model="heightInput"
+                                class="border-solid border-gray border-1px rounded-md h-20px px-1 dark:bg-gray-800 dark:color-gray dark:border-gray-700"
+                                type="number" min="0" max="100" name="" id="">
 
-                </li>
-                <!-- slider -->
-                <li class="flex items-center mb-10px">
-                    <div class="w-120px"><label for="">Referência do nível do mar:</label> </div>
-                    <Slide :parentState="refMar" @stateChanged="handleStateChanged" />
+                        </li>
+                        <!-- slider -->
+                        <li class="flex items-center mb-10px">
+                            <div class="w-120px"><label for="">Referência do nível do mar:</label> </div>
+                            <Slide :parentState="refMar" @stateChanged="handleStateChanged" />
 
-                </li>
-                <li class="flex items-center mb-10px">
-                    <div class="w-120px "><label for="">Elevação (m):</label> </div>
-                    <h5>10</h5>
+                        </li>
+                        <li class="flex items-center mb-10px">
+                            <div class="w-120px "><label for="">Elevação (m):</label> </div>
+                            <h5>10</h5>
 
-                </li>
-                <li class="flex items-center mb-10px">
-                    <div class="w-120px "><label for="">Distância de Grau (m):</label> </div>
-                    <h5>50</h5>
+                        </li>
+                        <li class="flex items-center mb-10px">
+                            <div class="w-120px "><label for="">Distância de Grau (m):</label> </div>
+                            <h5>50</h5>
 
-                </li>
-                <li class="flex items-center mb-10px">
-                    <div class="w-120px"><label for="">Velocidade (cm/s):</label> </div>
-                    <input v-model="speedInput" class="border-solid border-gray border-1px rounded-md h-20px px-1 dark:bg-gray-800 dark:color-gray dark:border-gray-700"
-                        type="number" min="0" max="1000" name="" id="">
+                        </li>
+                        <li class="flex items-center mb-10px">
+                            <div class="w-120px"><label for="">Velocidade (cm/s):</label> </div>
+                            <input v-model="speedInput"
+                                class="border-solid border-gray border-1px rounded-md h-20px px-1 dark:bg-gray-800 dark:color-gray dark:border-gray-700"
+                                type="number" min="0" max="1000" name="" id="">
 
-                </li>
-                <li v-if="isPHTIMEactive" class="flex items-center mb-10px">
-                    <div class="w-120px"><label for="">Tempo de espera (s):</label> </div>
-                    <input v-model="waitTimeInput" class="border-solid border-gray border-1px rounded-md h-20px px-1 dark:bg-gray-800 dark:color-gray dark:border-gray-700"
-                        type="number" min="1" max="1000" name="" id="">
+                        </li>
+                        <li v-if="isPHTIMEactive" class="flex items-center mb-10px">
+                            <div class="w-120px"><label for="">Tempo de espera (s):</label> </div>
+                            <input v-model="waitTimeInput"
+                                class="border-solid border-gray border-1px rounded-md h-20px px-1 dark:bg-gray-800 dark:color-gray dark:border-gray-700"
+                                type="number" min="1" max="1000" name="" id="">
 
+                        </li>
+                        <li class="flex items-center mb-10px">
+                            <button @click="deletePoint"
+                                class="shadow w-100% flex items-center p-2 mb-5px hover:bg-red-600  text-white bg-red-500 rounded-1">
+                                <font-awesome-icon class="pr-5px" icon="fa-solid fa-trash" />
+                                <h4>Deletar ponto</h4>
+                            </button>
+                        </li>
+                    </ul>
+                </DropDownMenu>
                 </li>
-                <li class="flex items-center mb-10px">
-                    <button @click="deletePoint"
-                        class="shadow w-100% flex items-center p-2 mb-5px hover:bg-red-600  text-white bg-red-500 rounded-1">
-                        <font-awesome-icon class="pr-5px" icon="fa-solid fa-trash" />
-                        <h4>Deletar ponto</h4>
-                    </button>
-                </li>
+                
+
             </ul>
 
         </div>
 
         <!-- mapa -->
-        <div id="map" ref="mapContainer" class="w-full h-full"></div>
+        <!-- <div id="map" ref="mapContainer" class="w-full h-full hidden sm:block"></div> -->
 
         <!-- fundo popup -->
         <div v-if="warningActive" class="w-100% h-92% z-1000 flex fixed justify-center items-center backdrop-blur-sm">

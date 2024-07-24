@@ -465,9 +465,10 @@ const confirmDeleteAllPoint = () => {
 
     <div class="w-full h-full z-0 block sm:flex">
         <!-- map mobile -->
-        <div id="map" ref="mapContainer" class="w-full h-50% block sm:hidden"></div>
+        <!-- <div id="map" ref="mapContainer" class="w-full h-50% block sm:hidden"></div> -->
+
         <!-- menu lateral -->
-        <div class="bg-white dark:bg-gray-900 dark:color-gray rounded-xl min-w-360px max-w-360px w-80% m-4 sm:w-full">
+        <div class="bg-white dark:bg-gray-900 dark:color-gray rounded-xl  m-4 sm:w-full sm:min-w-360px sm:max-w-360px">
             <div class=" pt-15px pl-15px w-full">
                 <h4 class="mb-5px font-bold text-5">Menu de ações</h4>
             </div>
@@ -589,7 +590,7 @@ const confirmDeleteAllPoint = () => {
         </div>
 
         <!-- mapa -->
-        <!-- <div id="map" ref="mapContainer" class="w-full h-full hidden sm:block"></div> -->
+        <div id="map" ref="mapContainer" class="w-full h-60% sm:h-full"></div>
 
         <!-- fundo popup -->
         <div v-if="warningActive" class="w-100% h-92% z-1000 flex fixed justify-center items-center backdrop-blur-sm">

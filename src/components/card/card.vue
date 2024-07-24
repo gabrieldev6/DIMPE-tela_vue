@@ -19,7 +19,7 @@ function fetchListFrame() {
 </script>
 
 <template>
-    <div class="ml-4 mt-4 bg-white shadow-xl rounded-lg w-72 dark:bg-gray-900 dark:color-gray dark:shadow-xl">
+    <div class="ml-4 mt-4 bg-white shadow-xl rounded-lg w-90% sm:w-72 dark:bg-gray-900 dark:color-gray dark:shadow-xl">
 
         
 

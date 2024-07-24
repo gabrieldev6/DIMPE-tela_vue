@@ -1,5 +1,9 @@
 <script setup lang="ts">
+// vue
 import { ref } from 'vue';
+// icone
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+// api
 import api from '../service/api';
 
 const img = ref()
@@ -11,21 +15,22 @@ const pegarValor = async (event: any) => {
     console.log(img.value)
     let formData = new FormData()
     formData.append('image', img.value)
-    
+
     console.log(formData)
     await api.post("/imgUser", formData, {
         'headers': {
             'Content-Type': 'multipart/form-data'
-        }}
-            ).then((response: any) => {
-            if (response.status == 200) {
-                console.log(response.data)
-                imgSafeS.value = true
-            }
+        }
+    }
+    ).then((response: any) => {
+        if (response.status == 200) {
+            console.log(response.data)
+            imgSafeS.value = true
+        }
 
-            }).catch((err)=> {
-                console.log(err)
-            })
+    }).catch((err) => {
+        console.log(err)
+    })
 
 }
 
@@ -33,32 +38,43 @@ const pegarValor = async (event: any) => {
 <template>
     <div class="w-full h-full flex justify-center items-center bg-gray-200">
         <div class="bg-white w-330px h-500px flex justify-center rounded-xl p-12 text-center">
-            <div class="w-full">
-                <div class="w-full flex justify-around items-center ">
-                    <div class="rounded-full shadow-md w-150px h-150px flex justify-between items-center">
-                        <img alt="foto do perfil" class="color-gray w-full h-full rounded-full">
-                        <!-- <img :src="$route.query.picture" alt="foto do perfil" class="color-gray w-full h-full rounded-full"> -->
-                    
-                    </div>
-                    <div>
-                        <h1>{{ $route.params.nome }}</h1>
-                        <div class="py-3 w-full flex ">
-                            <label for="inputFoto"
-                                class="shadow w-full p-1 hover:bg-blue-500 text-white bg-blue rounded-1 ">Trocar foto de
-                                perfil</label>
-                            <input @change="pegarValor" name="image" id="inputFoto" type="file" class="hidden">
+            <div class="w-full h-full">
+                <div class="w-full h-20% bg-gray rounded-t-2">
+
+                    <div class="w-full flex justify-start items-center">
+
+
+
+                        <div class="rounded-full m-4 shadow-md w-120px h-120px flex justify-center items-center bg-white">
+                            <font-awesome-icon icon="fa-solid fa-user" class="color-gray h-50% w-50%" />
                         </div>
-                        <p v-if="imgSafeS" class="text-red-500">imagem salva com sucesso</p>
+
+
+
                     </div>
+                </div>
+
+                <div>
+                    <h3>nome</h3>
+                    <h4>email</h4>
                 </div>
 
                 <router-link
                     :to="{ name: 'dashboard', query: { nome: $route.query.nome, picture: $route.query.picture, token: $route.query.token } }">
-                    <button class=" shadow w-full mt-10 p-2 hover:bg-blue-500 text-white bg-blue rounded-1 ">
+                    <button class=" shadow w-full mt-25 p-2 hover:bg-blue-500 text-white bg-blue rounded-1 ">
                         Voltar ao dashboard
                     </button>
                 </router-link>
-
+                <div class="flex justify-center items-center ">
+                            <label for="inputFoto"
+                                class="shadow p-1 bg-blue  hover:bg-blue-500 bg-white rounded-1 ">
+                                
+                                trocar foto
+                            </label>
+                            <input @change="pegarValor" name="image" id="inputFoto" type="file" class="hidden">
+                        
+                        
+                    </div>
 
             </div>
 

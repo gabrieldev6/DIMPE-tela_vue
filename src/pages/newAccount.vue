@@ -66,7 +66,7 @@ const submit = () => {
                     <div class="bg-white w-full mt-3 rounded-1 shadow flex items-center text-center text-gray">
                         <FontAwesomeIcon icon="fa-solid fa-user" class="p-2"></FontAwesomeIcon>
                         <input v-model="nome" type="text" placeholder="Nome"
-                            class="p-4 w-full rounded-1 text-4 font-bold">
+                            class="p-4 w-full rounded-1 text-4 font-bold dark:bg-gray-800">
 
                     </div>
                     <div class="bg-white w-full mt-3 rounded-1 shadow flex items-center text-center text-gray">

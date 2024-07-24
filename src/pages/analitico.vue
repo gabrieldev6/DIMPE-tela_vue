@@ -24,7 +24,7 @@ onMounted(async ()=> {
 
 </script>
 <template>
-    <div class=" w-100% h-30% flex items-center flex-wrap">
+    <div class=" w-full h-30% flex items-center flex-wrap">
         
             <Card v-for="list in listsFrames" :key="list.id_list" :data="list.data" :capa="list.capa" :id="list.id_list"></Card>
             

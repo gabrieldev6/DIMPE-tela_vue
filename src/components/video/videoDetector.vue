@@ -60,7 +60,7 @@ watch(click, async (click: any) => {
     descricao.value = "Iniciar"
 
 
-    
+
     // limpando variavel
     listBoundingBox.value.splice(0)
 
@@ -95,8 +95,8 @@ const LISTENERS: Record<string, Function> = {
 watch(dateBoundingBoxes, async (dateBoundingBoxes) => {
   if (dateBoundingBoxes.length != 0 && click.value == true) {
     let dataNow = `frame_${Date.now()}`
-    
-    
+
+
     if (!canvas2.value || !camera || !ctx2.value) {
       return
     }
@@ -200,7 +200,7 @@ async function loop() {
 
   canvas.value!.width = video.videoWidth
   canvas.value!.height = video.videoHeight
-  
+
 
   const draw = ctx.value;
   const frame = tf.browser.fromPixels(video)
@@ -226,7 +226,7 @@ async function loop() {
 
     draw.fillStyle = box.color
     draw.strokeStyle = box.color
-    draw.lineWidth = BOX_STYLE.box.borderSize-1
+    draw.lineWidth = BOX_STYLE.box.borderSize - 1
 
     draw.strokeRect(
       box.x,
@@ -306,12 +306,12 @@ watch(input, async (input: any) => {
 </script>
 
 <template>
-  <div class="ml-4 mt-4">
+  <div class=" p-4 w-full block sm:flex">
 
-<!-- min-w-900px min-h-450px -->
-    <div class="items-center bg-white p4 rounded-2 w-650px h-540px dark:bg-gray-900 dark:color-gray"> 
+    <!-- min-w-900px min-h-450px -->
+    <div class="items-center bg-white p4 rounded-2 sm:w-650px sm:h-540px dark:bg-gray-900 dark:color-gray">
       <div class="flex w-full my-5px justify-between text-center items-center ">
-        <h3>Transmissão de imagem</h3>
+        <h3>Imagem</h3>
         <select v-model="input" class="px-4 py-2 rounded-lg dark:bg-gray-900 dark:color-gray">
           <option disabled selected value="">Câmera</option>
           <option v-for="device in videoInputs" :key="device.deviceId" :value="device.deviceId">{{ device.label }}
@@ -327,25 +327,21 @@ watch(input, async (input: any) => {
         </div>
       </template>
 
-      <canvas v-else ref="canvas" class="w-100% "></canvas>
+      <canvas v-else ref="canvas" class="w-full"></canvas>
 
 
     </div>
-
-    
-
-  </div>
-
-  <div class="ml-4 mt-4">
-    <div class="bg-white rounded-2 px4 py2 w-350px h-50px flex justify-between items-center dark:bg-gray-900 dark:color-gray">
+    <div class="my-2 w-full">
+    <div
+      class="bg-white rounded-2 px4 py2 sm:w-350px h-50px flex justify-between items-center dark:bg-gray-900 dark:color-gray">
       <h5>Aperte iniciar para gerar relatorio</h5>
-      <button @click="click = !click" class="shadow w-30%  p-2 hover:bg-blue-500 text-white bg-blue rounded-1">{{
-          descricao
-        }}</button>
+      <button @click="click = !click" class="shadow w-30%  p-2 hover:bg-blue-500 text-white bg-blue rounded-1">
+        {{ descricao }}
+      </button>
     </div>
-    <div class="bg-white rounded-2 p4 w-350px mt-4 dark:bg-gray-900 dark:color-gray">
+    <div class="bg-white rounded-2 p4 sm:w-350px mt-4 dark:bg-gray-900 dark:color-gray">
       <h3 class="py-10px">Relatorio</h3>
-      <canvas ref="canvas2" class="bg-black w-350px h-230px rounded-1"></canvas>
+      <canvas ref="canvas2" class="bg-black w-full sm:w-350px sm:h-230px rounded-1"></canvas>
       <div class="bg-gray-200 flex justify-between px-4 mt1 rounded-1 text-gray-600 dark:bg-gray-800 dark:color-gray">
         <h5>Classe</h5>
         <h5>Hora</h5>
@@ -353,12 +349,12 @@ watch(input, async (input: any) => {
       </div>
       <div v-for="item in dateBoundingBoxes" :key="item.x" class="flex justify-between px-3 p-2 items-center ">
         <h5>{{ item.label }}</h5>
-        <h5>{{ date.getHours() }}:{{date.getMinutes()}}:{{date.getSeconds()}}</h5>
-        <h5>{{ item.score.toFixed(3)*100 }}%</h5>
+        <h5>{{ date.getHours() }}:{{ date.getMinutes() }}:{{ date.getSeconds() }}</h5>
+        <h5>{{ item.score.toFixed(3) * 100 }}%</h5>
       </div>
     </div>
 
-    <div v-if="erro" class="bg-red-600 rounded-2 p-4 w-350px flex my-14px">
+    <div v-if="erro" class="bg-red-600 rounded-2 p-4 flex my-14px">
       <font-awesome-icon icon="circle-exclamation" class="c-white h-20px w-20px" />
       <div class="px2">
         <h3 class="text-white ">Câmera não disponivel</h3>
@@ -367,5 +363,10 @@ watch(input, async (input: any) => {
 
     </div>
   </div>
+
+
+  </div>
+
   
+
 </template>

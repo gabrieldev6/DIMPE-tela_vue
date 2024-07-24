@@ -126,15 +126,15 @@ const validacao = (response: any) => {
                     
                 </div>
                 <div class="flex w-full justify-center dark:bg-gray-900 dark:color-gray">
-                    <span>Versão 12.17.0</span>
+                    <span class="text-3">Versão 0.0.0</span>
                 </div>
                 <div class="flex w-full justify-center dark:color-gray">
-                    <span>Copyright © 2024 - DIMPE - Todos os direitos reservados</span>
+                    <span class="text-3">Copyright © 2024 - DIMPE - Todos os direitos reservados</span>
                 </div>
                 <div class="w-full flex justify-around pt-2 dark:bg-gray-900 dark:color-gray">
-                    <span>Segurança da Informação</span>
-                    <span>Politica de Privacidade</span>
-                    <span>Código de Ética</span>
+                    <span class="text-3">Segurança da Informação</span>
+                    <span class="text-3">Politica de Privacidade</span>
+                    <span class="text-3">Código de Ética</span>
                 </div>
             </div>
             

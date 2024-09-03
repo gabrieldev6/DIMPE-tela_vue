@@ -10,7 +10,7 @@ import { RouterLink } from 'vue-router';
 import logo from "../assets/logoDimpe.svg"
 import { googleLogout } from 'vue3-google-login';
 
-import SlideBinary from '../components/slideBinary/slideBinary.vue';
+// import SlideBinary from '../components/slideBinary/slideBinary.vue';
 
 import { useDark } from '@vueuse/core'
 
@@ -99,7 +99,15 @@ const logout = () => {
               Opções
             </button>
           </li>
-
+          <li>
+            <router-link :to="{ name: 'teste', query: { nome: $route.query.nome, token: $route.query.token }}">
+            <button type="submit"
+              class=" bg-white  w-full flex text-4 shadow hover:shadow-md text-gray-500 items-center text-center my-1 p-2 rounded-2 border-solid border-l-4 border-l-blue-500 dark:border-l-blue-900 dark:bg-gray-800 dark:color-gray">
+              <font-awesome-icon icon="fa-solid fa-toolbox" class="mx-2" />
+              Teste
+            </button>
+            </router-link >
+          </li>
           <li>
             <router-link :to="{ name: 'login' }" @click="logout" class="no-underline">
               <button type="submit"
@@ -129,7 +137,7 @@ const logout = () => {
 
 
 
-              <SlideBinary v-model="isDark"/>
+              <input type="checkbox" v-model="isDark"/>
               <font-awesome-icon icon="fa-solid fa-moon" class="color-gray-400 dark:color-gray h-20px w-20px m-1"/>
             </div>
               

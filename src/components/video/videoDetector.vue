@@ -331,7 +331,7 @@ watch(input, async (input: any) => {
 
 
     </div>
-    <div class="my-2 w-full">
+    <div class="mt-2 sm:ml-4 w-full">
     <div
       class="bg-white rounded-2 px4 py2 sm:w-350px h-50px flex justify-between items-center dark:bg-gray-900 dark:color-gray">
       <h5>Aperte iniciar para gerar relatorio</h5>
@@ -354,7 +354,7 @@ watch(input, async (input: any) => {
       </div>
     </div>
 
-    <div v-if="erro" class="bg-red-600 rounded-2 p-4 flex my-14px">
+    <div v-if="erro" class="bg-red-600 rounded-2 p-4 flex my-14px sm:w-350px">
       <font-awesome-icon icon="circle-exclamation" class="c-white h-20px w-20px" />
       <div class="px2">
         <h3 class="text-white ">Câmera não disponivel</h3>

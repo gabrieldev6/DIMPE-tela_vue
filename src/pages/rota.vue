@@ -8,6 +8,7 @@ import { ref, onUnmounted, onMounted, watchEffect } from "vue";
 
 import Slide from '../components/slideBinary/slideBinary.vue'
 import DropDownMenu from '../components/menudd/dropdownMenu.vue'
+import Modal from "../components/modal/modal.vue"
 // componentes
 import { MissionItem } from '../types/misson.ts'
 import { Polyline } from '../types/polyline.ts'
@@ -478,7 +479,7 @@ const confirmDeleteAllPoint = () => {
 
                     <div class="w-full flex mb-5px  text-white bg-blue-500 hover:bg-blue-600 rounded-1 ">
                         <label for="inputFoto"
-                            class="shadow flex font-bold justify-center items-center w-full p-2 text-sm">
+                            class="shadow flex font-bold justify-center items-center w-full p-1 text-sm">
                             <font-awesome-icon class="pr-5px" icon="fa-solid fa-file-arrow-up" />
                             <h4 class="flex justify-center items-center">Carregar arquivo</h4>
                         </label>
@@ -490,23 +491,23 @@ const confirmDeleteAllPoint = () => {
                 </li>
 
                 <li class="mr-2"> <button @click="downloadFile"
-                        class=" text-sm shadow w-full flex items-center font-120px p-2 mb-5px  bg-blue-500 hover:bg-blue-600 text-white  rounded-1">
+                        class=" text-sm shadow w-full flex items-center p-1 mb-5px  bg-blue-500 hover:bg-blue-600 text-white  rounded-1">
                         <font-awesome-icon class="pr-5px" icon="fa-solid fa-file-arrow-down" />
                         <h4>Baixar arquivo</h4>
                     </button> </li>
                 <li class="mr-2"> <button @click="switchPopupDelete"
-                        class="shadow w-full flex items-center text-sm p-2 mb-5px bg-red-500 hover:bg-red-600 text-white  rounded-1"><font-awesome-icon
+                        class="shadow w-full flex items-center text-sm p-1 mb-5px bg-red-500 hover:bg-red-600 text-white  rounded-1"><font-awesome-icon
                             class="pr-5px" icon="fa-solid fa-trash" />
                         <h4>Deletar todos os pontos</h4>
                     </button> </li>
             </ul>
-            <ul class="list-none p-4 ">
+            <ul class="list-none py-2 px-4 ">
                 <li>
-                    <h4>Informações do arquivo</h4>
+                    <h5>Informações do arquivo</h5>
                 </li>
-                <li class="mb-5px">Nome do arquivo carregado: <label class="color-blue" for="">{{ nameFile }}</label>
+                <li class="mb-3px"><h5>Nome do arquivo carregado:</h5> <label class="color-blue" for="">{{ nameFile }}</label>
                 </li>
-                <li class="mb-5px">Distância (m): {{ Math.round(distance) }}</li>
+                <li class="mb-3px"><h5>Distância (m): {{ Math.round(distance) }}</h5></li>
             </ul>
             <ul class="list-none px-15px ">
                 <li>
@@ -593,14 +594,9 @@ const confirmDeleteAllPoint = () => {
         <div id="map" ref="mapContainer" class="w-full h-60% sm:h-full"></div>
 
         <!-- fundo popup -->
-        <div v-if="warningActive" class="w-100% h-92% z-1000 flex fixed justify-center items-center backdrop-blur-sm">
-
-            <!-- popup -->
-            <div
-                class="w-500px h-80px shadow flex fixed justify-around items-center bg-white rounded-2 border-solid border-l-4 border-l-blue-500 dark:bg-gray-900 dark:color-white dark:border-l-blue-900">
-                <h4>Quer mesmo deletar tudo?</h4>
-                <div class="flex">
-
+        <Modal label="Deletar marcadores" :show=warningActive>
+                
+                    <h4 class="flex items-center pr-2">Quer mesmo deletar todos os pontos</h4>
                     <button @click="switchPopupDelete"
                         class="w-100px h-40px shadow  flex items-center justify-center p-2 mx-5px text-black hover:bg-gray-100 bg-white rounded-1 dark:bg-gray-800 dark:color-gray dark:hover:bg-gray-700">
                         <h4>Cancelar</h4>
@@ -610,10 +606,10 @@ const confirmDeleteAllPoint = () => {
                         class="w-100px h-40px shadow flex items-center justify-center p-2 mx-5px text-white hover:bg-red-600 bg-red-500 rounded-1 ">
                         <h4>Deletar</h4>
                     </button>
-                </div>
+                
 
-            </div>
-        </div>
+            
+        </Modal>
 
     </div>
 </template>

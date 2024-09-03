@@ -192,8 +192,8 @@ watchEffect(() => {
 
         </div>
         <ul class="w-full h-88% flex list-none">
-            <!-- miniatura de imagens -->
-            <li class="w-70% min-w-200px h-full flex">
+
+            <li class="w-70%  h-full flex">
 
                 <!-- imagem completa -->
                 <div
@@ -206,9 +206,9 @@ watchEffect(() => {
 
                     <div v-if="listImg.length > 0" class="w-80% max-w-970px flex justify-center items-center">
                         <!--  -->
-                        <img :src="listImg[index].caminho" class="w-700px bg-black color-white w-full h-full "
+                        <img :src="listImg[index].caminho" class="w-650px bg-black color-white w-full h-full "
                             alt="imagem">
-                        <canvas ref="canvas" class="w-700px h-512px absolute opacity-50 "></canvas>
+                        <canvas ref="canvas" class="w-650px h-475px absolute opacity-50 "></canvas>
                     </div>
                     <div v-else class="h-94% flex items-center justify-center px-2 py-4 rounded-xl dark:color-gray">
 
@@ -223,22 +223,23 @@ watchEffect(() => {
             </li>
 
 
-            <li class="w-30% h-full ">
+            <li class="w-25% h-full ">
                 <div
                     class="bg-white w-full max-w-370px h-full mx-4 mt-4 px-4 rounded-xl shadow-xl dark:bg-gray-900 dark:color-gray overflow-x-auto focus:overscroll-contain">
                     <h3 class="py-4">Relatorio de patrulha</h3>
+                    
                     <DropDownMenu label='Lista de imagens'>
                         <div
-                            class=" bg-white h-full flex rounded-xl items-center overflow-x-auto focus:overscroll-contain dark:bg-gray-900">
+                        class=" bg-white w-60 h-25 flex rounded-xl items-center overflow-x-auto focus:overscroll-contain dark:bg-gray-900">
 
-                            <div v-for="(imagem, indexImg) in listImg"
-                                :class="['thumbnail', indexImg === index ? 'bg-gray-300 flex justify-center items-center rounded-lg p-1 m-1 dark:bg-gray-600 dark:hover:bg-gray-600' : ' flex justify-center items-center rounded-lg p-1 mx-1 hover:bg-gray-300 dark:hover:bg-gray-600']">
+                        <div v-for="(imagem, indexImg) in listImg"
+                            :class="['thumbnail', indexImg === index ? 'bg-gray-300 flex justify-center items-center rounded-lg p-1 dark:bg-gray-600 dark:hover:bg-gray-600' : ' flex justify-center items-center rounded-lg p-1 mx-1 hover:bg-gray-300 dark:hover:bg-gray-600']">
 
-                                <img @click="jumpIndex(indexImg)" :src="imagem.caminho"
-                                    class="w-80px hover:cursor-pointer" :key="imagem.id_frame" alt="">
+                            <img @click="jumpIndex(indexImg)" :src="imagem.caminho" class="w-80px hover:cursor-pointer"
+                                :key="imagem.id_frame" alt="">
 
-                            </div>
                         </div>
+                    </div>
                     </DropDownMenu>
 
                     <DropDownMenu label='Informações gerais de patrulha'>

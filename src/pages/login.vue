@@ -2,7 +2,7 @@
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import logo from '../assets/logoDrone.svg'
 
 import logo1 from "../assets/logoDimpe.svg"
@@ -13,14 +13,19 @@ import api from '../service/api.ts'
 import { userData } from '../types/user'
 import router from '../router';
 
-
+import Modal from "../components/modal/modal.vue";
 
 library.add(fas);
 
 let email = ref<string>('')
 let senha = ref<string>('')
 let campoNull = ref<boolean>(false)
-
+let showModalSecurity = ref<boolean>(false)
+let showModalPrivacy = ref<boolean>(false)
+let showModalCode = ref<boolean>(false)
+watchEffect(()=> {
+    console.log(showModalSecurity.value)
+})
 
 // login feito pelo backend
 let submit = async () => {
@@ -75,20 +80,62 @@ const validacao = (response: any) => {
 
 <template>
     <div class="w-full h-full flex justify-center items-center text-center bg-gray-200 dark:bg-gray-900">
+        
         <div class="bg-white w-full h-full 2xl:max-w-1800px sm:flex dark:bg-gray-900">
-            <div class="w-70% shadow-xl shadow-gray-400 hidden sm:block">
+            <div class="w-70%  shadow-xl shadow-gray-400 dark:shadow-black hidden sm:block z-100 ">
                 <!--  -->
-                <div class="w-full h-95% flex justify-around items-center bg-gradient-to-t from-blue-300 to-gray-700">
-                    <div class="w-40 h-40">
-                        <img :src="logo" alt="imagem meramente ilustrativa" class="w-full h-full">
+                <div class="w-full h-95% justify-around items-center bg-gray-700">
+                    <div class="h-25% flex justify-start ">
+                        <ul class="list-none pl-40">
+                            <li class="flex justify-end">
+                                <img :src="logo" alt="imagem meramente ilustrativa" class="rastro w-50px h-50px ">
+                                <img :src="logo" alt="imagem meramente ilustrativa" class="rastro w-50px h-50px ">
+                                <img :src="logo" alt="imagem meramente ilustrativa" class="rastro w-50px h-50px ">
+                            </li>
+                            <li class="flex justify-end">
+                                <img :src="logo" alt="imagem meramente ilustrativa" class="rastro w-50px h-50px">
+                                <img :src="logo" alt="imagem meramente ilustrativa" class="rastro w-50px h-50px">
+                            </li>
+                            <li class="flex justify-end">
+                                <img :src="logo" alt="imagem meramente ilustrativa" class="rastro w-50px h-50px">
+                                
+                            </li>
+                        </ul>
                     </div>
-                    <h1 class="color-white">Olá, seja bem vindo ao futuro!</h1>
+                    
+                    <div class="w-full h-50% flex items-center justify-around">
+                        
+                        
+                        <img :src="logo" alt="imagem meramente ilustrativa" class="w-40 h-40 ">
+                        <h1 class="color-white">Olá, seja bem vindo ao futuro!</h1>
+                    </div>
+                    <div class="flex justify-end h-25%">
+                        <ul class="list-none pr-40">
+                            <li class="flex justify-start">
+                                <img :src="logo" alt="imagem meramente ilustrativa" class="rastro w-50px h-50px ">
+                                
+                            </li>
+                            <li class="flex justify-start">
+                                <img :src="logo" alt="imagem meramente ilustrativa" class="rastro w-50px h-50px">
+                                <img :src="logo" alt="imagem meramente ilustrativa" class="rastro w-50px h-50px">
+                            </li>
+                            <li class="flex justify-start">
+                                <img :src="logo" alt="imagem meramente ilustrativa" class="rastro w-50px h-50px">
+                                <img :src="logo" alt="imagem meramente ilustrativa" class="rastro w-50px h-50px ">
+                                <img :src="logo" alt="imagem meramente ilustrativa" class="rastro w-50px h-50px ">
+                                
+                            </li>
+                            
+                        </ul>
+                    </div>
                 </div>
+                
                 <button class="w-full h-5% hover:bg-gray-300">O que é Dimpe?</button>
             </div>
             
             <div class="px-10 h-90% py-5 sm:w-30% dark:bg-gray-900 dark:color-white">
                 <div class="w-full h-95%">
+                    
                     <img :src="logo1" alt="logo" class="w-150px mt-8 2xl:w-250px">
                     <div class="w-full flex justify-start"><h2 class="mt-12 font-normal dark:color-gray">Entrar</h2></div>
                     
@@ -126,20 +173,122 @@ const validacao = (response: any) => {
                     
                 </div>
                 <div class="flex w-full justify-center dark:bg-gray-900 dark:color-gray">
-                    <span class="text-3">Versão 0.0.0</span>
+                    <span class="text-3">Versão 0.0.1</span>
                 </div>
                 <div class="flex w-full justify-center dark:color-gray">
                     <span class="text-3">Copyright © 2024 - DIMPE - Todos os direitos reservados</span>
                 </div>
                 <div class="w-full flex justify-around pt-2 dark:bg-gray-900 dark:color-gray">
-                    <span class="text-3">Segurança da Informação</span>
-                    <span class="text-3">Politica de Privacidade</span>
-                    <span class="text-3">Código de Ética</span>
+                    <button @click="showModalSecurity=!showModalSecurity" class="text-3 bg-white cursor-pointer  dark:color-gray dark:bg-gray-900">Segurança da Informação</button>
+                    <button @click="showModalPrivacy=!showModalPrivacy" class="text-3 bg-white cursor-pointer dark:color-gray dark:bg-gray-900 ">Politica de Privacidade</button>
+                    <button @click="showModalCode=!showModalCode" class="text-3 bg-white cursor-pointer dark:color-gray dark:bg-gray-900 " >Código de Ética</button>
                 </div>
             </div>
             
         </div>
-        
 
+        <Modal label="Segurança da informação" :show=showModalSecurity >
+            <ul class="h-500px text-left list-none overflow-y-scroll">
+                <li class="pb-2"><h2>Proteção de Dados Pessoais</h2></li>
+                <li class="pb-2"><p>Todos os dados pessoais capturados e processados pela aplicação DIMPE, incluindo imagens de indivíduos, devem ser tratados conforme as leis de proteção de dados aplicáveis, como a Lei Geral de Proteção de Dados (LGPD) no Brasil, o Regulamento Geral sobre a Proteção de Dados (GDPR) na União Europeia, ou legislações equivalentes.</p></li>
+                <li class="pb-2"><p>Apenas imagens nas quais pessoas foram identificadas serão armazenadas. Dados adicionais como a quantidade de pessoas e suas localizações na imagem também serão registrados.</p></li>
+                <li class="pb-2"><h2>Autorização e Consentimento</h2></li>
+                <li class="pb-2"><p>A captura de imagens e a identificação de pessoas devem ser realizadas somente em locais e situações em que haja consentimento prévio dos indivíduos ou que estejam de acordo com a legislação aplicável.</p></li>
+                <li class="pb-2"><p>Em casos onde o consentimento não é requerido por lei, a aplicação deve fornecer informações claras sobre a coleta e processamento de dados.</p></li>
+                <li class="pb-2"><h2>Controle de Acesso</h2></li>
+                <li class="pb-2"><p>O acesso às imagens e informações armazenadas na aplicação DIMPE deve ser restrito a indivíduos autorizados.</p></li>
+                <li class="pb-2"><p>Implementar autenticação de múltiplos fatores (MFA) para todas as contas de usuários que acessam a aplicação.</p></li>
+                <li class="pb-2"><p>Registros de auditoria devem ser mantidos para monitorar o acesso aos dados e garantir que apenas pessoas autorizadas possam visualizar ou manipular informações.</p></li>
+                <li class="pb-2"><h2>Armazenamento Seguro</h2></li>
+                <li class="pb-2"><p>As imagens e dados relacionados devem ser armazenados em servidores seguros, com mecanismos de criptografia em repouso (at rest) para garantir a confidencialidade.</p></li>
+                <li class="pb-2"><p>Os dados sensíveis devem ser encriptados usando padrões de criptografia robustos, como AES-256.</p></li>
+                <li class="pb-2"><p>Backups dos dados devem ser realizados regularmente e armazenados de forma segura para prevenir perda de dados.</p></li>
+                
+                <li class="pb-2"><h2>Transmissão de Dados Segura</h2></li>
+                <li class="pb-2"><p>Toda comunicação entre o drone, a aplicação e os servidores de armazenamento deve ser protegida por criptografia em trânsito (in transit), utilizando protocolos como TLS (Transport Layer Security).</p></li>
+                <li class="pb-2"><h2>Retenção e Exclusão de Dados</h2></li>
+                <li class="pb-2"><p>Os dados pessoais devem ser armazenados apenas pelo tempo necessário para os fins para os quais foram coletados e processados.</p></li>
+                <li class="pb-2"><p>Após o período de retenção ou a pedido do titular dos dados, as imagens e informações associadas devem ser excluídas de forma segura, garantindo que não possam ser recuperadas.</p></li>
+                <li class="pb-2"><h2>Prevenção de Acesso Não Autorizado e Incidentes de Segurança</h2></li>
+                <li class="pb-2"><p>Implementar firewalls, sistemas de detecção de intrusão (IDS), e sistemas de prevenção de intrusão (IPS) para proteger contra acessos não autorizados e ataques cibernéticos.</p></li>
+                <li class="pb-2"><p>Todos os incidentes de segurança devem ser documentados e investigados prontamente, com notificações aos titulares dos dados e autoridades competentes, conforme exigido por lei.</p></li>
+                <li class="pb-2"><h2>Treinamento e Conscientização de Usuários</h2></li>
+                <li class="pb-2"><p>Todos os usuários e operadores da aplicação DIMPE devem receber treinamento regular sobre práticas de segurança da informação, proteção de dados e privacidade.</p></li>
+                <li class="pb-2"><p>Políticas de segurança devem ser revisadas e atualizadas periodicamente para garantir a conformidade com as melhores práticas e requisitos legais.</p></li>
+            </ul>
+            
+        </Modal>
+        <Modal label="Politica de privacidade" :show=showModalPrivacy >
+            <ul class="h-500px text-left list-none overflow-y-scroll">
+                <li class="pb-2"><h2>Proteção de Dados Pessoais</h2></li>
+                <li class="pb-2"><p>Todos os dados pessoais capturados e processados pela aplicação DIMPE, incluindo imagens de indivíduos, devem ser tratados conforme as leis de proteção de dados aplicáveis, como a Lei Geral de Proteção de Dados (LGPD) no Brasil, o Regulamento Geral sobre a Proteção de Dados (GDPR) na União Europeia, ou legislações equivalentes.</p></li>
+                <li class="pb-2"><p>Apenas imagens nas quais pessoas foram identificadas serão armazenadas. Dados adicionais como a quantidade de pessoas e suas localizações na imagem também serão registrados.</p></li>
+                <li class="pb-2"><h2>Autorização e Consentimento</h2></li>
+                <li class="pb-2"><p>A captura de imagens e a identificação de pessoas devem ser realizadas somente em locais e situações em que haja consentimento prévio dos indivíduos ou que estejam de acordo com a legislação aplicável.</p></li>
+                <li class="pb-2"><p>Em casos onde o consentimento não é requerido por lei, a aplicação deve fornecer informações claras sobre a coleta e processamento de dados.</p></li>
+                <li class="pb-2"><h2>Controle de Acesso</h2></li>
+                <li class="pb-2"><p>O acesso às imagens e informações armazenadas na aplicação DIMPE deve ser restrito a indivíduos autorizados.</p></li>
+                <li class="pb-2"><p>Implementar autenticação de múltiplos fatores (MFA) para todas as contas de usuários que acessam a aplicação.</p></li>
+                <li class="pb-2"><p>Registros de auditoria devem ser mantidos para monitorar o acesso aos dados e garantir que apenas pessoas autorizadas possam visualizar ou manipular informações.</p></li>
+                <li class="pb-2"><h2>Armazenamento Seguro</h2></li>
+                <li class="pb-2"><p>As imagens e dados relacionados devem ser armazenados em servidores seguros, com mecanismos de criptografia em repouso (at rest) para garantir a confidencialidade.</p></li>
+                <li class="pb-2"><p>Os dados sensíveis devem ser encriptados usando padrões de criptografia robustos, como AES-256.</p></li>
+                <li class="pb-2"><p>Backups dos dados devem ser realizados regularmente e armazenados de forma segura para prevenir perda de dados.</p></li>
+                
+                <li class="pb-2"><h2>Transmissão de Dados Segura</h2></li>
+                <li class="pb-2"><p>Toda comunicação entre o drone, a aplicação e os servidores de armazenamento deve ser protegida por criptografia em trânsito (in transit), utilizando protocolos como TLS (Transport Layer Security).</p></li>
+                <li class="pb-2"><h2>Retenção e Exclusão de Dados</h2></li>
+                <li class="pb-2"><p>Os dados pessoais devem ser armazenados apenas pelo tempo necessário para os fins para os quais foram coletados e processados.</p></li>
+                <li class="pb-2"><p>Após o período de retenção ou a pedido do titular dos dados, as imagens e informações associadas devem ser excluídas de forma segura, garantindo que não possam ser recuperadas.</p></li>
+                <li class="pb-2"><h2>Prevenção de Acesso Não Autorizado e Incidentes de Segurança</h2></li>
+                <li class="pb-2"><p>Implementar firewalls, sistemas de detecção de intrusão (IDS), e sistemas de prevenção de intrusão (IPS) para proteger contra acessos não autorizados e ataques cibernéticos.</p></li>
+                <li class="pb-2"><p>Todos os incidentes de segurança devem ser documentados e investigados prontamente, com notificações aos titulares dos dados e autoridades competentes, conforme exigido por lei.</p></li>
+                <li class="pb-2"><h2>Treinamento e Conscientização de Usuários</h2></li>
+                <li class="pb-2"><p>Todos os usuários e operadores da aplicação DIMPE devem receber treinamento regular sobre práticas de segurança da informação, proteção de dados e privacidade.</p></li>
+                <li class="pb-2"><p>Políticas de segurança devem ser revisadas e atualizadas periodicamente para garantir a conformidade com as melhores práticas e requisitos legais.</p></li>
+            </ul>
+            
+        </Modal>
+        <Modal label="Códico de etica" :show=showModalCode >
+            <ul class="h-500px text-left list-none overflow-y-scroll">
+                <li class="pb-2"><h2>Proteção de Dados Pessoais</h2></li>
+                <li class="pb-2"><p>Todos os dados pessoais capturados e processados pela aplicação DIMPE, incluindo imagens de indivíduos, devem ser tratados conforme as leis de proteção de dados aplicáveis, como a Lei Geral de Proteção de Dados (LGPD) no Brasil, o Regulamento Geral sobre a Proteção de Dados (GDPR) na União Europeia, ou legislações equivalentes.</p></li>
+                <li class="pb-2"><p>Apenas imagens nas quais pessoas foram identificadas serão armazenadas. Dados adicionais como a quantidade de pessoas e suas localizações na imagem também serão registrados.</p></li>
+                <li class="pb-2"><h2>Autorização e Consentimento</h2></li>
+                <li class="pb-2"><p>A captura de imagens e a identificação de pessoas devem ser realizadas somente em locais e situações em que haja consentimento prévio dos indivíduos ou que estejam de acordo com a legislação aplicável.</p></li>
+                <li class="pb-2"><p>Em casos onde o consentimento não é requerido por lei, a aplicação deve fornecer informações claras sobre a coleta e processamento de dados.</p></li>
+                <li class="pb-2"><h2>Controle de Acesso</h2></li>
+                <li class="pb-2"><p>O acesso às imagens e informações armazenadas na aplicação DIMPE deve ser restrito a indivíduos autorizados.</p></li>
+                <li class="pb-2"><p>Implementar autenticação de múltiplos fatores (MFA) para todas as contas de usuários que acessam a aplicação.</p></li>
+                <li class="pb-2"><p>Registros de auditoria devem ser mantidos para monitorar o acesso aos dados e garantir que apenas pessoas autorizadas possam visualizar ou manipular informações.</p></li>
+                <li class="pb-2"><h2>Armazenamento Seguro</h2></li>
+                <li class="pb-2"><p>As imagens e dados relacionados devem ser armazenados em servidores seguros, com mecanismos de criptografia em repouso (at rest) para garantir a confidencialidade.</p></li>
+                <li class="pb-2"><p>Os dados sensíveis devem ser encriptados usando padrões de criptografia robustos, como AES-256.</p></li>
+                <li class="pb-2"><p>Backups dos dados devem ser realizados regularmente e armazenados de forma segura para prevenir perda de dados.</p></li>
+                
+                <li class="pb-2"><h2>Transmissão de Dados Segura</h2></li>
+                <li class="pb-2"><p>Toda comunicação entre o drone, a aplicação e os servidores de armazenamento deve ser protegida por criptografia em trânsito (in transit), utilizando protocolos como TLS (Transport Layer Security).</p></li>
+                <li class="pb-2"><h2>Retenção e Exclusão de Dados</h2></li>
+                <li class="pb-2"><p>Os dados pessoais devem ser armazenados apenas pelo tempo necessário para os fins para os quais foram coletados e processados.</p></li>
+                <li class="pb-2"><p>Após o período de retenção ou a pedido do titular dos dados, as imagens e informações associadas devem ser excluídas de forma segura, garantindo que não possam ser recuperadas.</p></li>
+                <li class="pb-2"><h2>Prevenção de Acesso Não Autorizado e Incidentes de Segurança</h2></li>
+                <li class="pb-2"><p>Implementar firewalls, sistemas de detecção de intrusão (IDS), e sistemas de prevenção de intrusão (IPS) para proteger contra acessos não autorizados e ataques cibernéticos.</p></li>
+                <li class="pb-2"><p>Todos os incidentes de segurança devem ser documentados e investigados prontamente, com notificações aos titulares dos dados e autoridades competentes, conforme exigido por lei.</p></li>
+                <li class="pb-2"><h2>Treinamento e Conscientização de Usuários</h2></li>
+                <li class="pb-2"><p>Todos os usuários e operadores da aplicação DIMPE devem receber treinamento regular sobre práticas de segurança da informação, proteção de dados e privacidade.</p></li>
+                <li class="pb-2"><p>Políticas de segurança devem ser revisadas e atualizadas periodicamente para garantir a conformidade com as melhores práticas e requisitos legais.</p></li>
+            </ul>
+            
+        </Modal>
     </div>
 </template>
+<style>
+.rastro {
+
+    transition: opacity 0.7s ease;
+
+}
+.rastro:hover {
+    opacity: 0.5;
+}
+</style>

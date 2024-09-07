@@ -309,7 +309,7 @@ watch(input, async (input: any) => {
   <div class=" p-4 w-full block sm:flex">
 
     <!-- min-w-900px min-h-450px -->
-    <div class="items-center bg-white p4 rounded-2 sm:w-650px sm:h-540px dark:bg-gray-900 dark:color-gray">
+    <div class="items-center bg-white p4 rounded-2 sm:w-full sm:h-540px dark:bg-gray-900 dark:color-gray">
       <div class="flex w-full my-5px justify-between text-center items-center ">
         <h3>Imagem</h3>
         <select v-model="input" class="px-4 py-2 rounded-lg dark:bg-gray-900 dark:color-gray">
@@ -320,53 +320,53 @@ watch(input, async (input: any) => {
         </select>
       </div>
 
-      <template v-if="!ready">
-        <div class="m-4px items-center w-full h-full ">
 
-          <Loading max="100" :progress="progress * 100" :ready="ready"></Loading>
-        </div>
-      </template>
+      <div v-if="!ready" class="m-4px items-center w-full h-full ">
 
-      <canvas v-else ref="canvas" class="w-full"></canvas>
+        <Loading max="100" :progress="progress * 100" :ready="ready"></Loading>
+      </div>
+
+
+      <canvas v-else ref="canvas" class="w-full "></canvas>
 
 
     </div>
     <div class="mt-2 sm:ml-4 w-full">
-    <div
-      class="bg-white rounded-2 px4 py2 sm:w-350px h-50px flex justify-between items-center dark:bg-gray-900 dark:color-gray">
-      <h5>Aperte iniciar para gerar relatorio</h5>
-      <button @click="click = !click" class="shadow w-30%  p-2 hover:bg-blue-500 text-white bg-blue rounded-1">
-        {{ descricao }}
-      </button>
-    </div>
-    <div class="bg-white rounded-2 p4 sm:w-350px mt-4 dark:bg-gray-900 dark:color-gray">
-      <h3 class="py-10px">Relatorio</h3>
-      <canvas ref="canvas2" class="bg-black w-full sm:w-350px sm:h-230px rounded-1"></canvas>
-      <div class="bg-gray-200 flex justify-between px-4 mt1 rounded-1 text-gray-600 dark:bg-gray-800 dark:color-gray">
-        <h5>Classe</h5>
-        <h5>Hora</h5>
-        <h5>Score</h5>
+      <div
+        class="bg-white rounded-2 px4 py2 sm:w-350px h-50px flex justify-between items-center dark:bg-gray-900 dark:color-gray">
+        <h5>Aperte iniciar para gerar relatorio</h5>
+        <button @click="click = !click" class="shadow w-30%  p-2 hover:bg-blue-500 text-white bg-blue rounded-1">
+          {{ descricao }}
+        </button>
       </div>
-      <div v-for="item in dateBoundingBoxes" :key="item.x" class="flex justify-between px-3 p-2 items-center ">
-        <h5>{{ item.label }}</h5>
-        <h5>{{ date.getHours() }}:{{ date.getMinutes() }}:{{ date.getSeconds() }}</h5>
-        <h5>{{ item.score.toFixed(3) * 100 }}%</h5>
+      <div class="bg-white rounded-2 p4 sm:w-350px mt-4 dark:bg-gray-900 dark:color-gray">
+        <h3 class="py-10px">Relatorio</h3>
+        <canvas ref="canvas2" class="bg-black w-full sm:w-350px sm:h-230px rounded-1"></canvas>
+        <div class="bg-gray-200 flex justify-between px-4 mt1 rounded-1 text-gray-600 dark:bg-gray-800 dark:color-gray">
+          <h5>Classe</h5>
+          <h5>Hora</h5>
+          <h5>Score</h5>
+        </div>
+        <div v-for="item in dateBoundingBoxes" :key="item.x" class="flex justify-between px-3 p-2 items-center ">
+          <h5>{{ item.label }}</h5>
+          <h5>{{ date.getHours() }}:{{ date.getMinutes() }}:{{ date.getSeconds() }}</h5>
+          <h5>{{ item.score.toFixed(3) * 100 }}%</h5>
+        </div>
+      </div>
+
+      <div v-if="erro" class="bg-red-600 rounded-2 p-4 flex my-14px sm:w-350px">
+        <font-awesome-icon icon="circle-exclamation" class="c-white h-20px w-20px" />
+        <div class="px2">
+          <h3 class="text-white ">Câmera não disponivel</h3>
+          <p class="text-white ">Verifique se a camera esta conectada corretamente, ou se há erro no hardware</p>
+        </div>
+
       </div>
     </div>
 
-    <div v-if="erro" class="bg-red-600 rounded-2 p-4 flex my-14px sm:w-350px">
-      <font-awesome-icon icon="circle-exclamation" class="c-white h-20px w-20px" />
-      <div class="px2">
-        <h3 class="text-white ">Câmera não disponivel</h3>
-        <p class="text-white ">Verifique se a camera esta conectada corretamente, ou se há erro no hardware</p>
-      </div>
 
-    </div>
   </div>
 
 
-  </div>
-
-  
 
 </template>

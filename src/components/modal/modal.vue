@@ -15,7 +15,7 @@ watchEffect(()=> {
         <!-- popup -->
         
         <div v-show="$props.show"
-            class="w-600px max-h-600px shadow fixed justify-around items-center bg-white rounded-2 border-solid border-l-4 border-l-blue-500 dark:bg-gray-900 dark:color-gray dark:border-l-blue-900">
+            class="sm:w-600px sm:max-h-600px w-500px shadow fixed justify-around items-center bg-white rounded-2 border-solid border-l-4 border-l-blue-500 dark:bg-gray-900 dark:color-gray dark:border-l-blue-900">
             <div class="flex justify-between items-center p3">
                 <h3>{{ props.label }}</h3>
 

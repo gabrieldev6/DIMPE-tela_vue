@@ -185,8 +185,8 @@ watchEffect(() => {
             <router-link
                 :to="{ name: 'analitico', query: { nome: $route.query.nome, picture: $route.query.picture, token: $route.query.token } }">
                 <button
-                    class="bg-white flex justify-center items-center rounded-full p-2 mx-4 hover:cursor-pointer hover:bg-gray-200 transition-colors shadow-xl dark:bg-gray-800 dark:color-gray dark:hover:bg-gray-700 ">
-                    <font-awesome-icon icon="fa-solid fa-x" class="h-18px w-18px c-gray-500" />
+                    class="bg-white flex justify-center items-center rounded-md p-2 mx-4 hover:cursor-pointer hover:bg-gray-200 transition-colors shadow-xl dark:bg-gray-800 dark:color-gray dark:hover:bg-gray-700 ">
+                    <font-awesome-icon icon="fa-solid fa-x" class=" c-gray-500" />
                 </button>
             </router-link>
 
